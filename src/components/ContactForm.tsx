@@ -22,8 +22,8 @@ const ContactForm = () => {
           </span>
           <h4>Email Us</h4>
 
-          <a href="mailto:info@unionbankswitzerland.com">
-            info@unionbankswitzerland.com
+          <a href="mailto:info@capitalspringsbank.com">
+            info@capitalspringsbank.com
           </a>
         </div>
         <div className="flex flex-col justify-center items-center w-full shadow-lg py-7 gap-3 px-4">

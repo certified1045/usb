@@ -36,7 +36,7 @@ const Login = () => {
     <section className={styles.background}>
       <div className={styles.form}>
         {error && <h6 className={styles.error}>{error}</h6>}
-        <h2>Union Bank of Switzerland</h2>
+        <h2>Capital Springs Bank</h2>
         <h6>Login To Your Account</h6>
         <form onSubmit={handleSubmit(login)} method="POST">
           <input

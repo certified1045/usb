@@ -6,8 +6,8 @@ import { AuthProvider } from "@/components/AuthContext";
 import AdminLayout from "@/components/admin/AdminLayout";
 
 export const metadata: Metadata = {
-  title: "Union Bank of Switzerland",
-  description: "Union Bank of Switzerland Bank",
+  title: "Capital Springs Bank",
+  description: "Capital Springs Bank Bank",
 };
 
 export default function RootLayout({

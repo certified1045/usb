@@ -67,7 +67,7 @@ const Register: FC = () => {
         ) : ( */}
         <span>
           {error && <h6 className={styles.error}>{error}</h6>}
-          <h2>Union Bank of Switzerland</h2>
+          <h2>Capital Springs Bank</h2>
           <h6>Create Your Account Now</h6>
           <form onSubmit={handleSubmit(signUp)} method="POST">
             <input
