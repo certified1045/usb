@@ -339,7 +339,7 @@ const SendMoney = () => {
                             </InputOTP>
                           </FormControl>
                           <FormDescription>
-                            Please enter your transaction pin.
+                            Please enter your account pin.
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
