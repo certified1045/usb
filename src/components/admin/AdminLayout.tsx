@@ -124,7 +124,7 @@ const AdminLayout = ({ children }: any) => {
         </div>
       </div>
       <div className="flex flex-col">
-        <header className="flex h-14 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-0">
+        <header className="flex h-14 items-center border-b bg-muted/40 px-4 lg:h-[80px] lg:px-0">
           {reg && <DashboardNavMobile />}
           {admin && <AdminDashboardNavMobile />}
 

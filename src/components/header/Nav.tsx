@@ -16,8 +16,14 @@ const Nav = () => {
       {/* <div className={styles.height}></div> */}
       <div className={styles.navbarItems}>
         <span className={styles.navbarLogo}>
-          <Link href="/" className={`${!!dash && "lg:hidden"}`}>
-            <p className="logo px-2 font-semibold">CSB</p>
+          <Link
+            href="/"
+            className={`${
+              !!dash && "lg:hidden"
+            } logo px-2 font-semibold flex justify-center flex-col items-center gap-0`}
+          >
+            <div className="h-4">Capital</div>
+            <div>Springs Bank</div>
           </Link>
         </span>
         {/* TODO */}

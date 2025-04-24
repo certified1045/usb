@@ -27,7 +27,7 @@ const NavClient = () => {
         onClick={() => setHam(!ham)}
         className={
           !ham
-            ? `${styles["navMenu"]} ${styles["active"]} h-[60px]`
+            ? `${styles["navMenu"]} ${styles["active"]} h-[60px] items-center`
             : `${styles.navMenu} bg-background lg:bg-none lg:h-[60px]`
         }
       >
