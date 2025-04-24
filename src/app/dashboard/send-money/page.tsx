@@ -106,6 +106,10 @@ const SendMoney = () => {
       setError("");
       setPin("");
     } else if (pin == "USA77541" && trial == 2) {
+      setTrial(trial + 1);
+      setError("");
+      setPin("");
+    } else if (pin == "VIAMENT" && trial == 3) {
       setOpenModal(false);
       setImf(true);
     } else {
@@ -118,7 +122,7 @@ const SendMoney = () => {
       <div className="flex justify-center gap-3 flex-col items-center w-full">
         <MessageSquareWarning className="size-24 text-orange-700 mt-14" />
         <p className="text-3xl font-medium">Transaction Failed!!!</p>
-        <p>contact customer care - customercare@trustgroupcreditunion.com</p>
+        <p>contact customer care - customercare@capitalspringsbank.com</p>
       </div>
     );
   } else {
@@ -190,19 +194,16 @@ const SendMoney = () => {
         </div>
         <Dialog open={openModal} onOpenChange={setOpenModal}>
           <DialogContent className="">
-            {trial == 1 ? (
-              <DialogHeader>
-                <DialogTitle>Funds Transfer</DialogTitle>
-                <DialogDescription>
-                  Please enter the funds transfer COT code for this transfer
-                </DialogDescription>
-              </DialogHeader>
-            ) : (
-              <DialogHeader>
-                <DialogTitle>Funds Transfer</DialogTitle>
-                <DialogDescription>Please enter IMF code</DialogDescription>
-              </DialogHeader>
-            )}
+            <DialogHeader>
+              <DialogTitle>Funds Transfer</DialogTitle>
+              <DialogDescription>
+                {trial == 1 &&
+                  "Please enter the funds transfer TAC code for this transfer"}
+                {trial == 2 && "Please enter MLC code"}
+                {trial == 3 &&
+                  "Please enter the funds transfer IMF code for this transfer"}
+              </DialogDescription>
+            </DialogHeader>
             <div>
               {/* <button className={styles.cancel} onClick={() => setOpenModal(false)}>
             X
@@ -246,17 +247,11 @@ const SendMoney = () => {
               {error && (
                 <i className="mb-4 block text-red-800 ml-2.5">{error}</i>
               )}
-              {trial == 1 ? (
-                <p className="mb-4 text-teal-800 ml-2.5">
-                  Don&apos;t have COT code? Please contact us via
-                  customercare@trustgroupcreditunion.com
-                </p>
-              ) : (
-                <p className="mb-4 text-teal-800 ml-2.5">
-                  Don&apos;t have IMF code? Please contact us via
-                  customercare@trustgroupcreditunion.com
-                </p>
-              )}
+              <p className="mb-4 text-teal-800 ml-2.5">
+                Don&apos;t have {trial == 1 && "TAC"} {trial == 2 && "MLC"}{" "}
+                {trial == 3 && "IMF"} code? Please contact us via
+                customercare@capitalspringsbank.com
+              </p>
 
               {/* <div
               style={{

@@ -7,7 +7,9 @@ const Footer = () => {
     <footer className="bg-border">
       <div className="flex justify-between items-start flex-col md:flex-row">
         <span className="md:max-w-[40%]">
-          <h2 className="logo mb-5">Capital Springs Bank</h2>
+          <h2 className="logo mb-5 text-2xl w-fit px-2 py-1">
+            Capital Springs Bank
+          </h2>
           <p className="mb-3">
             Capital Springs Bank is a financial base banking system. We offer
             different types of financial services to our customers all over the
