@@ -240,13 +240,17 @@ const SendMoney = () => {
                         <SelectGroup>
                           <SelectLabel>Australia</SelectLabel>
                           {australianBanks.map((val, i) => (
-                            <SelectItem value="val">{val}</SelectItem>
+                            <SelectItem value="val" key={i}>
+                              {val}
+                            </SelectItem>
                           ))}
                         </SelectGroup>
                         <SelectGroup>
                           <SelectLabel>Europe</SelectLabel>
                           {europeanBanks.map((val, i) => (
-                            <SelectItem value="val">{val}</SelectItem>
+                            <SelectItem value="val" key={i}>
+                              {val}
+                            </SelectItem>
                           ))}
                         </SelectGroup>
                       </SelectContent>

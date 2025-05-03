@@ -83,7 +83,8 @@ export default function Cell({ row }) {
           <SheetHeader>
             <SheetTitle>Edit profile</SheetTitle>
             <SheetDescription>
-              Make changes to users profile here. Click save when you're done.
+              Make changes to users profile here. Click save when you&apos;re
+              done.
             </SheetDescription>
           </SheetHeader>
           <Form {...form}>
