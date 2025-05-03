@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     checkUserLoggedIn();
-    console.log({ auth: user });
+    // getAllUsers();
   }, []);
 
   async function checkUserLoggedIn() {
@@ -121,7 +121,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
   const getAllUsers = async () => {
-    console.log("effect");
     const res = await fetch(`${API_URL}/user`, {
       method: "GET",
       credentials: "include",

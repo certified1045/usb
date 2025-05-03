@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   // url      = "postgres://sonlbgid:nNmfL1fKmsW7THXgYTUhgH0m5OiXXVgf@snuffleupagus.db.elephantsql.com/sonlbgid"
-  url      = "postgres://default:3BCNZlR6auTh@ep-lingering-bar-a4fbj2oz.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
+  url      = "postgres://default:3BCNZlR6auTh@ep-lingering-bar-a4fbj2oz.us-east-1.aws.neon.tech:5432/verceldb"
 }
 
 model User {
@@ -25,6 +25,7 @@ model User {
   currency        String        @default("€")
   transactions    Transaction[]
   verification    Verification? @relation(fields: [verification_id], references: [id])
+  pin             String        @default("44774")
 }
 
 model Transaction {

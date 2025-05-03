@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styles from "@/styles/Dashboard.module.css";
-// import { toast } from "@/components/hooks/use-toast";
-import Modal from "@/components/Modal";
 import { bankList } from "@/helpers/banksList";
 import {
   Dialog,
@@ -13,15 +11,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MessageSquareWarning } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Loader, MessageSquareWarning } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@/components/ui/Input-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,8 +30,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import AuthContext from "@/components/AuthContext";
+import { Input } from "@/components/ui/input";
+
+const CODES = ["TAC", "MLC", "IMF"];
 
 const SendMoney = () => {
+  const { user }: any = useContext(AuthContext);
+
+  const index = (user?.account_no - 1002784563).toString();
+
   const [account_no, setAccount_no] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
@@ -47,6 +51,10 @@ const SendMoney = () => {
   const [isLoading, setIsloading] = useState(false);
   const [imf, setImf] = useState(false);
   const [showPin, setShowPin] = useState(false);
+
+  console.log({ trial });
+  console.log({ code: CODES[trial + 1] });
+  console.log(user);
 
   const FormSchema = z.object({
     pin: z.string().min(5, {
@@ -62,36 +70,23 @@ const SendMoney = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
     console.log({ pin: data });
-    if (data.pin == "44774") {
+    if (data.pin == user.pin) {
       setTrial(1);
       setOpenModal(true);
     } else {
       alert("Wrong pin");
     }
-    // 44774
   }
 
   const sendMoney = (e: any) => {
     setIsloading(true);
     e.preventDefault();
-    setTimeout(whatever, 1);
+    setTimeout(() => {}, 3000);
 
+    setShowPin(true);
     setIsloading(false);
   };
-
-  function whatever() {
-    setShowPin(true);
-    // alert("Account number not found. \nPlease input correct account number");
-  }
 
   const checkPin = (e: any) => {
     setIsloading(true);
@@ -101,20 +96,24 @@ const SendMoney = () => {
   };
 
   function pinnnn() {
-    if (pin == "771947" && trial == 1) {
-      setTrial(trial + 1);
-      setError("");
-      setPin("");
-    } else if (pin == "USA77541" && trial == 2) {
-      setTrial(trial + 1);
-      setError("");
-      setPin("");
-    } else if (pin == "VIAMENT" && trial == 3) {
-      setOpenModal(false);
-      setImf(true);
-    } else {
-      setError("The Code you entered is incorrect.");
-    }
+    setIsloading(true);
+    setTimeout(() => {
+      if (pin == `70${index.padEnd(4, "3")}` && trial == 1) {
+        setTrial(trial + 1);
+        setError("");
+        setPin("");
+      } else if (pin == `USA82${index.padEnd(3, "8")}` && trial == 2) {
+        setTrial(trial + 1);
+        setError("");
+        setPin("");
+      } else if (pin == `VIAM${index.padEnd(3, "6")}` && trial == 3) {
+        setOpenModal(false);
+        setImf(true);
+      } else {
+        setError("The Code you entered is incorrect.");
+      }
+      setIsloading(false);
+    }, 2000);
   }
 
   if (imf) {
@@ -133,7 +132,7 @@ const SendMoney = () => {
           <form onSubmit={sendMoney}>
             <label>
               <p>Account Number:</p>
-              <input
+              <Input
                 required
                 type="number"
                 value={account_no}
@@ -159,7 +158,7 @@ const SendMoney = () => {
             </label>
             <label>
               <p>Amount:</p>
-              <input
+              <Input
                 required
                 type="number"
                 value={amount}
@@ -168,7 +167,7 @@ const SendMoney = () => {
             </label>
             {/* <label>
 							<p>Pin:</p>
-							<input
+							<Input
 								required
 								type='number'
 								value={pin}
@@ -219,9 +218,9 @@ const SendMoney = () => {
                   marginBottom: "12px",
                 }}
               >
-                <input
+                <Input
                   required
-                  placeholder={trial == 1 ? "COT Code" : "IMF code"}
+                  placeholder={CODES[trial - 1] + " " + "Code"}
                   type="password"
                   value={pin}
                   onChange={(e) => {
@@ -230,17 +229,20 @@ const SendMoney = () => {
                   }}
                 />
                 <button
+                  disabled={isLoading}
                   type="submit"
-                  style={{
-                    paddingInline: "16px",
-                    paddingBlock: "12px",
-                    fontSize: "16px",
-                    color: "white",
-                    backgroundColor: "#0f80df",
-                    borderRadius: "4px",
-                    border: 0,
-                  }}
+                  className="px-4 py-3 text-base text-white bg-[#0f80df] b-0 rounded disabled:opacity-50 flex items-center gap-2"
+                  // style={{
+                  //   paddingInline: "16px",
+                  //   paddingBlock: "12px",
+                  //   fontSize: "16px",
+                  //   color: "white",
+                  //   backgroundColor: "#0f80df",
+                  //   borderRadius: "4px",
+                  //   border: 0,
+                  // }}
                 >
+                  {isLoading && <Loader className="animate-spin" />}
                   Authenticate
                 </button>
               </form>
@@ -291,16 +293,19 @@ const SendMoney = () => {
                   setError("");
                   setPin("");
                 }}
-                style={{
-                  paddingInline: "16px",
-                  paddingBlock: "12px",
-                  fontSize: "16px",
-                  color: "white",
-                  backgroundColor: "#df3b0f",
-                  borderRadius: "4px",
-                  border: 0,
-                }}
+                className="disabled:opacity-50 px-4 py-3 text-base text-white bg-[#df3b0f] rounded b-0 flex items-center gap-2"
+                disabled={isLoading}
+                // style={{
+                //   paddingInline: "16px",
+                //   paddingBlock: "12px",
+                //   fontSize: "16px",
+                //   color: "white",
+                //   backgroundColor: "#df3b0f",
+                //   borderRadius: "4px",
+                //   border: 0,
+                // }}
               >
+                {isLoading && <Loader className="animate-spin" />}
                 Cancel funds transfer
               </button>
             </DialogFooter>

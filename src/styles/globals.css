@@ -193,9 +193,6 @@ textarea {
 .grey {
   color: rgba(255, 255, 255, 0.09);
 }
-button:disabled {
-  color: #00000010;
-}
 
 .btnIcon {
   display: flex;

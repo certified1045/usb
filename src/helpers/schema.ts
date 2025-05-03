@@ -39,6 +39,24 @@ export const RegisterApiSchema = z.object({
     .max(20, { message: "Must contain at most 20 characters" }),
 });
 
+export const EditUserSchema = z.object({
+  pin: z.string().length(5, { message: "Must be 5 characters long" }),
+  isAdmin: z.boolean(),
+  verified: z.boolean(),
+  email: z
+    .string()
+    .email({ message: "Please input a valid email address" })
+    .max(50, { message: "Must contain at most 50 characters" }),
+  fullName: z
+    .string()
+    .min(2, { message: "Must contain at least 2 characters" })
+    .max(15, { message: "Must contain at most 15 characters" })
+    .regex(/[a-zA-z]/, { message: "Must contain alphabets only" }),
+  TAC: z.string().length(6, { message: "Must be 6 characters long" }),
+  MLC: z.string().length(8, { message: "Must be 8 characters long" }),
+  IMF: z.string().length(7, { message: "Must be 7 characters long" }),
+});
+
 export const CreateUserSchema = RegisterApiSchema.extend({
   confirm_password: z
     .string()
