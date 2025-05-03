@@ -2,7 +2,7 @@
 
 import { useContext, useState } from "react";
 import styles from "@/styles/Dashboard.module.css";
-import { bankList } from "@/helpers/banksList";
+import { australianBanks, bankList, europeanBanks } from "@/helpers/banksList";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/Input-otp";
+} from "@/components/ui/input-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -32,6 +32,23 @@ import {
 } from "@/components/ui/form";
 import AuthContext from "@/components/AuthContext";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const CODES = ["TAC", "MLC", "IMF"];
 
@@ -51,10 +68,6 @@ const SendMoney = () => {
   const [isLoading, setIsloading] = useState(false);
   const [imf, setImf] = useState(false);
   const [showPin, setShowPin] = useState(false);
-
-  console.log({ trial });
-  console.log({ code: CODES[trial + 1] });
-  console.log(user);
 
   const FormSchema = z.object({
     pin: z.string().min(5, {
@@ -126,233 +139,259 @@ const SendMoney = () => {
     );
   } else {
     return (
-      <div className={styles.details}>
-        <div className={`${styles.con} ${styles.over}`}>
-          <h6 className="tac">SEND MONEY</h6>
-          <form onSubmit={sendMoney}>
-            <label>
-              <p>Account Number:</p>
-              <Input
-                required
-                type="number"
-                value={account_no}
-                onChange={(e) => setAccount_no(e.target.value)}
-              />
-            </label>
-            <label>
-              <p>Select Bank:</p>
-              <select
-                value={selectedBank}
-                onChange={(e) => setSelectedBank(e.target.value)}
-              >
-                {bankList.map((bankName, index) => (
-                  <option
-                    key={index}
-                    value={bankName}
-                    style={{ color: "black" }}
+      <div className="flex justify-center">
+        <Tabs defaultValue="local" className="w-[400px]">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="local">Local transfers</TabsTrigger>
+            <TabsTrigger value="international">
+              International transfers
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="local">
+            <Card>
+              <CardHeader>
+                <CardTitle>Local transfers</CardTitle>
+                <CardDescription>
+                  Make transfers to banks in USA.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={sendMoney} className="flex flex-col gap-3">
+                  <label>
+                    <p>Account Number:</p>
+                    <Input
+                      required
+                      type="number"
+                      value={account_no}
+                      onChange={(e) => setAccount_no(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    <p>Select Bank:</p>
+                    <select
+                      value={selectedBank}
+                      onChange={(e) => setSelectedBank(e.target.value)}
+                    >
+                      {bankList.map((bankName, index) => (
+                        <option
+                          key={index}
+                          value={bankName}
+                          style={{ color: "black" }}
+                        >
+                          {bankName}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    <p>Amount:</p>
+                    <Input
+                      required
+                      type="number"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    <p>Note:</p>
+                    <textarea
+                      value={note}
+                      required
+                      onChange={(e) => setNote(e.target.value)}
+                    ></textarea>
+                  </label>
+                  <Button
+                    type="submit"
+                    className="max-w-40 mx-auto block mb-4 bg-blue-950"
+                    disabled={isLoading}
                   >
-                    {bankName}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <p>Amount:</p>
-              <Input
-                required
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
-            </label>
-            {/* <label>
-							<p>Pin:</p>
-							<Input
-								required
-								type='number'
-								value={pin}
-								onChange={(e) => setPin(e.target.value)}
-							/>
-						</label> */}
-            <label>
-              <p>Note:</p>
-              <textarea
-                value={note}
-                required
-                onChange={(e) => setNote(e.target.value)}
-              ></textarea>
-            </label>
-            <Button
-              type="submit"
-              className="max-w-40 mx-auto block mb-4 bg-blue-950"
-              disabled={isLoading}
-            >
-              Send Money
-            </Button>
-          </form>
-        </div>
-        <Dialog open={openModal} onOpenChange={setOpenModal}>
-          <DialogContent className="">
-            <DialogHeader>
-              <DialogTitle>Funds Transfer</DialogTitle>
-              <DialogDescription>
-                {trial == 1 &&
-                  "Please enter the funds transfer TAC code for this transfer"}
-                {trial == 2 && "Please enter MLC code"}
-                {trial == 3 &&
-                  "Please enter the funds transfer IMF code for this transfer"}
-              </DialogDescription>
-            </DialogHeader>
-            <div>
-              {/* <button className={styles.cancel} onClick={() => setOpenModal(false)}>
-            X
-          </button> */}
-              <form
-                onSubmit={checkPin}
-                className="flex gap-3 items-center w"
-                style={{
-                  display: "flex",
-                  gap: 12,
-                  alignItems: "baseline",
-                  paddingInline: "10px",
-                  marginBottom: "12px",
-                }}
-              >
-                <Input
-                  required
-                  placeholder={CODES[trial - 1] + " " + "Code"}
-                  type="password"
-                  value={pin}
-                  onChange={(e) => {
-                    setPin(e.target.value);
-                    setError("");
+                    Send Money
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="international">
+            <Card>
+              <CardHeader>
+                <CardTitle>International transfers</CardTitle>
+                <CardDescription>
+                  Make transfers to banks in Europe and Australia.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={sendMoney} className="flex flex-col gap-3">
+                  <label>
+                    <p>Account Number:</p>
+                    <Input
+                      required
+                      type="number"
+                      value={account_no}
+                      onChange={(e) => setAccount_no(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    <p>Select Bank:</p>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select bank" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Australia</SelectLabel>
+                          {australianBanks.map((val, i) => (
+                            <SelectItem value="val">{val}</SelectItem>
+                          ))}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Europe</SelectLabel>
+                          {europeanBanks.map((val, i) => (
+                            <SelectItem value="val">{val}</SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </label>
+                  <label>
+                    <p>Amount:</p>
+                    <Input
+                      required
+                      type="number"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    <p>Note:</p>
+                    <textarea
+                      value={note}
+                      required
+                      onChange={(e) => setNote(e.target.value)}
+                    ></textarea>
+                  </label>
+                  <Button
+                    type="submit"
+                    className="max-w-40 mx-auto block mb-4 bg-blue-950"
+                    disabled={isLoading}
+                  >
+                    Send Money
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <Dialog open={openModal} onOpenChange={setOpenModal}>
+            <DialogContent className="">
+              <DialogHeader>
+                <DialogTitle>Funds Transfer</DialogTitle>
+                <DialogDescription>
+                  {trial == 1 &&
+                    "Please enter the funds transfer TAC code for this transfer"}
+                  {trial == 2 && "Please enter MLC code"}
+                  {trial == 3 &&
+                    "Please enter the funds transfer IMF code for this transfer"}
+                </DialogDescription>
+              </DialogHeader>
+              <div>
+                <form
+                  onSubmit={checkPin}
+                  className="flex gap-3 items-center w"
+                  style={{
+                    display: "flex",
+                    gap: 12,
+                    alignItems: "baseline",
+                    paddingInline: "10px",
+                    marginBottom: "12px",
                   }}
-                />
+                >
+                  <Input
+                    required
+                    placeholder={CODES[trial - 1] + " " + "Code"}
+                    type="password"
+                    value={pin}
+                    onChange={(e) => {
+                      setPin(e.target.value);
+                      setError("");
+                    }}
+                  />
+                  <button
+                    disabled={isLoading}
+                    type="submit"
+                    className="px-4 py-3 text-base text-white bg-[#0f80df] b-0 rounded disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {isLoading && <Loader className="animate-spin" />}
+                    Authenticate
+                  </button>
+                </form>
+                {error && (
+                  <i className="mb-4 block text-red-800 ml-2.5">{error}</i>
+                )}
+                <p className="mb-4 text-teal-800 ml-2.5">
+                  Don&apos;t have {trial == 1 && "TAC"} {trial == 2 && "MLC"}{" "}
+                  {trial == 3 && "IMF"} code? Please contact us via
+                  customercare@capitalspringsbank.com
+                </p>
+              </div>
+              <DialogFooter>
                 <button
+                  onClick={() => {
+                    setOpenModal(false);
+                    setTrial(1);
+                    setError("");
+                    setPin("");
+                  }}
+                  className="disabled:opacity-50 px-4 py-3 text-base text-white bg-[#df3b0f] rounded b-0 flex items-center gap-2"
                   disabled={isLoading}
-                  type="submit"
-                  className="px-4 py-3 text-base text-white bg-[#0f80df] b-0 rounded disabled:opacity-50 flex items-center gap-2"
-                  // style={{
-                  //   paddingInline: "16px",
-                  //   paddingBlock: "12px",
-                  //   fontSize: "16px",
-                  //   color: "white",
-                  //   backgroundColor: "#0f80df",
-                  //   borderRadius: "4px",
-                  //   border: 0,
-                  // }}
                 >
                   {isLoading && <Loader className="animate-spin" />}
-                  Authenticate
+                  Cancel funds transfer
                 </button>
-              </form>
-              {error && (
-                <i className="mb-4 block text-red-800 ml-2.5">{error}</i>
-              )}
-              <p className="mb-4 text-teal-800 ml-2.5">
-                Don&apos;t have {trial == 1 && "TAC"} {trial == 2 && "MLC"}{" "}
-                {trial == 3 && "IMF"} code? Please contact us via
-                customercare@capitalspringsbank.com
-              </p>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={showPin} onOpenChange={setShowPin}>
+            <DialogContent className="">
+              <DialogHeader>
+                {/* <DialogTitle>Funds Transfer</DialogTitle> */}
+                <DialogDescription>
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="w-2/3 space-y-6"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="pin"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>PIN</FormLabel>
+                            <FormControl>
+                              <InputOTP maxLength={5} {...field}>
+                                <InputOTPGroup>
+                                  <InputOTPSlot index={0} />
+                                  <InputOTPSlot index={1} />
+                                  <InputOTPSlot index={2} />
+                                  <InputOTPSlot index={3} />
+                                  <InputOTPSlot index={4} />
+                                </InputOTPGroup>
+                              </InputOTP>
+                            </FormControl>
+                            <FormDescription>
+                              Please enter your account pin.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              {/* <div
-              style={{
-                paddingInline: "16px",
-                display: "flex",
-                marginRight: "10px",
-                justifyContent: "end",
-                marginBottom: "25px",
-              }}
-            >
-              <button
-                onClick={() => {
-                  setOpenModal(false);
-                  setTrial(1);
-                  setError("");
-                  setPin("");
-                }}
-                style={{
-                  paddingInline: "16px",
-                  paddingBlock: "12px",
-                  fontSize: "16px",
-                  color: "white",
-                  backgroundColor: "#df3b0f",
-                  borderRadius: "4px",
-                  border: 0,
-                }}
-              >
-                Cancel funds transfer
-              </button>
-            </div> */}
-            </div>
-            <DialogFooter>
-              <button
-                onClick={() => {
-                  setOpenModal(false);
-                  setTrial(1);
-                  setError("");
-                  setPin("");
-                }}
-                className="disabled:opacity-50 px-4 py-3 text-base text-white bg-[#df3b0f] rounded b-0 flex items-center gap-2"
-                disabled={isLoading}
-                // style={{
-                //   paddingInline: "16px",
-                //   paddingBlock: "12px",
-                //   fontSize: "16px",
-                //   color: "white",
-                //   backgroundColor: "#df3b0f",
-                //   borderRadius: "4px",
-                //   border: 0,
-                // }}
-              >
-                {isLoading && <Loader className="animate-spin" />}
-                Cancel funds transfer
-              </button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <Dialog open={showPin} onOpenChange={setShowPin}>
-          <DialogContent className="">
-            <DialogHeader>
-              {/* <DialogTitle>Funds Transfer</DialogTitle> */}
-              <DialogDescription>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-2/3 space-y-6"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="pin"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>PIN</FormLabel>
-                          <FormControl>
-                            <InputOTP maxLength={5} {...field}>
-                              <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                                <InputOTPSlot index={3} />
-                                <InputOTPSlot index={4} />
-                              </InputOTPGroup>
-                            </InputOTP>
-                          </FormControl>
-                          <FormDescription>
-                            Please enter your account pin.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <Button type="submit">Submit</Button>
-                  </form>
-                </Form>
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
+                      <Button type="submit">Submit</Button>
+                    </form>
+                  </Form>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </Tabs>
       </div>
     );
   }
