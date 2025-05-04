@@ -8,7 +8,6 @@ const prisma = new Prisma();
 
 export const POST = async (request: NextRequest) => {
   const { email, password } = LoginSchema.parse(await request.json());
-  console.log(`${email} and ${password}`);
   if (email) {
     try {
       const user = await prisma.user.findUnique({
@@ -16,7 +15,6 @@ export const POST = async (request: NextRequest) => {
           email,
         },
       });
-      console.log({ user });
       if (!user) {
         return new NextResponse(
           JSON.stringify({
