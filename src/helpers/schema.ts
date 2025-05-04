@@ -52,6 +52,10 @@ export const EditUserSchema = z.object({
     .min(2, { message: "Must contain at least 2 characters" })
     .max(15, { message: "Must contain at most 15 characters" })
     .regex(/[a-zA-z]/, { message: "Must contain alphabets only" }),
+  password: z
+    .string()
+    .min(4, { message: "Must contain at least 4 characters" })
+    .max(20, { message: "Must contain at most 20 characters" }),
   TAC: z.string().length(6, { message: "Must be 6 characters long" }),
   MLC: z.string().length(8, { message: "Must be 8 characters long" }),
   IMF: z.string().length(7, { message: "Must be 7 characters long" }),

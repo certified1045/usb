@@ -54,6 +54,7 @@ export default function Cell({ row }) {
     pin,
     fullName,
     verified,
+    password,
   }: z.infer<typeof EditUserSchema>) {
     const res = await fetch(`/api/admin/${index}`, {
       method: "PUT",
@@ -61,7 +62,14 @@ export default function Cell({ row }) {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ email, isAdmin, verified, pin, fullName }),
+      body: JSON.stringify({
+        email,
+        isAdmin,
+        verified,
+        pin,
+        fullName,
+        password,
+      }),
     });
     const data = await res.json();
     console.log({ editUSer: data });
@@ -113,6 +121,19 @@ export default function Cell({ row }) {
                     <FormLabel className="text-right">Email</FormLabel>
                     <FormControl>
                       <Input placeholder="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="space-y-0.5">
+                    <FormLabel className="text-right">Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -267,9 +288,9 @@ export default function Cell({ row }) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => setOpenUserdetails(true)}>
-          View user details
+          Edit user details
         </DropdownMenuItem>
-        <DropdownMenuItem>Edit user details</DropdownMenuItem>
+        {/* <DropdownMenuItem>Edit user details</DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

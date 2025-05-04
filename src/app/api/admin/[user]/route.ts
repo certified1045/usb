@@ -10,11 +10,12 @@ export const PUT = async (
 ) => {
   const account_no = +(await params).user;
   const req = await request.json();
-  if (req.apassword) {
-    req.password = AES.encrypt(
+  if (req.password) {
+    req.password_hash = AES.encrypt(
       req.password,
       "process.env.PASSWORD_SECRET!"
     ).toString();
+    delete req.password;
   }
   const { ...all } = req;
   console.log({ edit: all });

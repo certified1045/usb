@@ -148,7 +148,7 @@ export const UsersColumns: ColumnDef<Users>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      <Cell row={row} />;
+      return <Cell row={row} />;
     },
   },
 ];
