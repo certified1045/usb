@@ -4,7 +4,7 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { API_URL } from "@/helpers/vars";
 
-interface IUser {
+export interface IUser {
   email: string;
   isAdmin: boolean;
   fullName: string;
@@ -15,11 +15,11 @@ interface IUser {
   verified: boolean;
   verifying: boolean;
   pending_KYC: boolean;
+  verification: null | { identity_doc: string; address_doc: string };
   verification_id: number | null;
   currency: string;
   transactions?: [];
 }
-
 interface IContext {
   user: IUser | null;
   users: IUser[] | null;
@@ -100,6 +100,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkUserLoggedIn();
     // getAllUsers();
   }, []);
+
+  console.log({ users });
 
   async function checkUserLoggedIn() {
     const res = await fetch(`${API_URL}/auth/login`, {
