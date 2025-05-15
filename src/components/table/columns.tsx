@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
-import Cell from "./cell";
+import { IUser } from "../AuthContext";
+import { Cell, VerifyOptions } from "./cell";
 
 type Transaction = {
   // id: 4,
@@ -13,32 +14,16 @@ type Transaction = {
   to: string;
   created_at: string;
   userAccount_no: number;
-}[];
-
-type Users = {
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  created_at: string;
-  account_no: number;
-  account_bal: number;
-  verified: boolean;
-  verifying: boolean;
-  pending_KYC: boolean;
-  verification_id: null;
-  currency: string;
-  verification: null;
-  transactions: Transaction[];
-}[];
+};
 
 export const transactionsColumns: ColumnDef<Transaction>[] = [
   {
-    accessorKey: "created_at",
+    // accessorKey: "created_at",
     header: "Date",
     cell: ({ row }) => {
-      const date = new Date(row.getValue("created_at"));
-      date.toISOString().substring(0, 10);
-      return <div>{row.getValue("created_at").slice(0, 10)}</div>;
+      // const date = new Date(row.getValue("created_at"));
+      // date.toISOString().substring(0, 10);
+      return <div>{row.original.created_at.slice(0, 10)}</div>;
     },
   },
   {
@@ -46,10 +31,10 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
     header: "Currency",
   },
   {
-    accessorKey: "amount",
+    // accessorKey: "amount",
     header: "Amount",
     cell: ({ row }) => {
-      const amount = row.getValue("amount").toLocaleString();
+      const amount = row.original.amount.toLocaleString();
       return <div>{amount}</div>;
     },
   },
@@ -61,7 +46,7 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
     header: "Grand Total",
     cell: ({ row }) => {
       const type = row.getValue("cr_or_dr");
-      const amount = row.getValue("amount").toLocaleString();
+      const amount = row.original.amount.toLocaleString();
       return (
         <div className={type == "CR" ? "text-green-500" : "text-orange-700"}>
           {amount}
@@ -110,7 +95,7 @@ export const loanColumns = [
   },
 ];
 
-export const UsersColumns: ColumnDef<Users>[] = [
+export const UsersColumns: ColumnDef<IUser>[] = [
   {
     accessorKey: "account_no",
     header: "A/C Number",
@@ -134,7 +119,7 @@ export const UsersColumns: ColumnDef<Users>[] = [
       const date = new Date(row.getValue("created_at"));
       // date.toISOString().substring(0, 10);
       console.log({ verified: row.getValue("verified"), date });
-      return <div>{row.getValue("created_at").slice(0, 10)}</div>;
+      return <div>{date.toISOString().slice(0, 10)}</div>;
     },
   },
   // {
@@ -149,6 +134,27 @@ export const UsersColumns: ColumnDef<Users>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       return <Cell row={row} />;
+    },
+  },
+];
+
+export const VerifyColumns: ColumnDef<IUser>[] = [
+  {
+    accessorKey: "account_no",
+    header: "A/C Number",
+  },
+  {
+    accessorKey: "fullName",
+    header: "Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <VerifyOptions original={row.original} />;
     },
   },
 ];

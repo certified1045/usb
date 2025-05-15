@@ -6,6 +6,8 @@ import styles from "@/styles/Dashboard.module.css";
 import Image from "next/image";
 import Modal from "@/components/Modal";
 import { API_URL } from "@/helpers/vars";
+import { VerifyColumns } from "@/components/table/columns";
+import { DataTable } from "@/components/table/data-table";
 
 const Kyc = () => {
   interface kk {
@@ -32,11 +34,12 @@ const Kyc = () => {
 
   interface kkk extends Array<kk> {}
 
-  const { users, getAllUsers }: { users: unknown; getAllUsers?: any } =
-    useContext(AuthContext);
+  const { users, getAllUsers } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [docImg, setDocImg] = useState("");
+
+  console.log({ users });
 
   // const [kycList, setKycList] = useState([]);
   // const [loading, setLoading] = useState(false);
@@ -74,7 +77,7 @@ const Kyc = () => {
     console.log(e.target.value);
     const account_no = e.target.value;
     setLoading(true);
-    const res = await fetch(`${API_URL}/admin/verify-doc`, {
+    const res = await fetch("/api/admin/verify-doc", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -100,85 +103,12 @@ const Kyc = () => {
     <div className={styles.details}>
       <div className={`${styles["con"]} ${styles["over"]}`}>
         <p>Users Documents</p>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>AC Number</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>ID Doc</th>
-              <th>Address Doc</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          {users ? (
-            // let kycList = users.filter((e: any) => {
-            // 	return e.verification;
-            // });
-
-            // console.log(kycList);
-            <tbody>
-              {(users as kkk).map(
-                (user, i: number) =>
-                  user.verification && (
-                    <tr key={i}>
-                      <td></td>
-                      <td>{+user.account_no}</td>
-                      <td>{user.fullName}</td>
-                      <td>{user.email}</td>
-                      <td>
-                        {" "}
-                        <button
-                          onClick={() =>
-                            handleImgView(user?.verification?.identity_doc)
-                          }
-                        >
-                          Click here
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          onClick={() =>
-                            handleImgView(user?.verification?.address_doc)
-                          }
-                        >
-                          Click here
-                        </button>
-                      </td>
-                      <td>
-                        {user.verified ? (
-                          "Verified"
-                        ) : (
-                          <button
-                            onClick={verify}
-                            value={user.account_no}
-                            disabled={loading}
-                          >
-                            Verify
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  )
-              )}
-            </tbody>
-          ) : (
-            ""
-          )}
-        </table>
+        <DataTable
+          columns={VerifyColumns}
+          data={users?.filter((user) => user.verification) || []}
+          isLoading={false}
+        />
       </div>
-      <Modal openModal={openModal}>
-        <div className={styles.editTransactionModal}>
-          <button
-            className={styles.transactionModalCancel}
-            onClick={() => setOpenModal(false)}
-          >
-            X
-          </button>
-          <Image src={docImg} alt="Verification document" fill />
-        </div>
-      </Modal>
     </div>
   );
 };
