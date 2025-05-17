@@ -1,74 +1,51 @@
+import { TransactionsSchema } from "@/helpers/schema";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { z } from "zod";
 import { IUser } from "../AuthContext";
 import { Cell, VerifyOptions } from "./cell";
 
-type Transaction = {
-  // id: 4,
-  amount: number;
-  charge: number;
-  type: string;
-  condition: string;
-  cr_or_dr: "CR" | "DR";
-  currency: string;
-  from: string;
-  to: string;
-  created_at: string;
-  userAccount_no: number;
-};
-
-export const transactionsColumns: ColumnDef<Transaction>[] = [
+export const transactionsColumns: ColumnDef<
+  z.infer<typeof TransactionsSchema>
+>[] = [
   {
-    // accessorKey: "created_at",
+    accessorKey: "date",
     header: "Date",
-    cell: ({ row }) => {
-      // const date = new Date(row.getValue("created_at"));
-      // date.toISOString().substring(0, 10);
-      return <div>{row.original.created_at.slice(0, 10)}</div>;
+    cell: ({ getValue }) => {
+      return <div>{format(getValue(), "PPP")}</div>;
     },
   },
   {
-    accessorKey: "currency",
-    header: "Currency",
-  },
-  {
-    // accessorKey: "amount",
-    header: "Amount",
+    header: "Description",
     cell: ({ row }) => {
-      const amount = row.original.amount.toLocaleString();
-      return <div>{amount}</div>;
-    },
-  },
-  {
-    accessorKey: "charge",
-    header: "Charge",
-  },
-  {
-    header: "Grand Total",
-    cell: ({ row }) => {
-      const type = row.getValue("cr_or_dr");
-      const amount = row.original.amount.toLocaleString();
       return (
-        <div className={type == "CR" ? "text-green-500" : "text-orange-700"}>
-          {amount}
+        <div>
+          {row.original.accountName} - {row.original.note}
         </div>
       );
     },
   },
   {
-    accessorKey: "cr_or_dr",
-    header: "DR/CR",
+    accessorKey: "id",
+    header: "Ref.",
   },
   {
-    accessorKey: "type",
-    header: "Type",
-  },
-  {
-    header: "Method",
-    cell: () => <div>Manual</div>,
-  },
-  {
-    accessorKey: "condition",
-    header: "Status",
+    accessorKey: "amount",
+    header: "Amount ($)",
+    cell: ({ row }) => {
+      return (
+        <div
+          className={`${
+            row.original.type == "Deposit"
+              ? "text-green-700"
+              : "text-orange-700"
+          }`}
+        >
+          {row.original.type == "Withdrawal" && "-"}{" "}
+          {row.original.amount.toLocaleString()}
+        </div>
+      );
+    },
   },
 ];
 

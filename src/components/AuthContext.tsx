@@ -2,7 +2,7 @@
 
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { API_URL } from "@/helpers/vars";
+// import type {} from "@prisma/client"
 
 export interface IUser {
   email: string;
@@ -20,6 +20,7 @@ export interface IUser {
   currency: string;
   transactions?: [];
 }
+
 interface IContext {
   user: IUser | null;
   users: IUser[] | null;
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async ({ email, password }: any) => {
     setLoading(true);
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(`/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signout = async () => {
-    const res = await fetch(`${API_URL}/auth/logout`, {
+    const res = await fetch(`/api/auth/logout`, {
       method: "POST",
       credentials: "include",
       cache: "no-store",
@@ -104,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   console.log({ users });
 
   async function checkUserLoggedIn() {
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(`/api/auth/login`, {
       method: "GET",
       credentials: "include",
       cache: "no-store",
@@ -123,7 +124,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
   const getAllUsers = async () => {
-    const res = await fetch(`${API_URL}/user`, {
+    const res = await fetch(`/api/user`, {
       method: "GET",
       credentials: "include",
       cache: "no-store",

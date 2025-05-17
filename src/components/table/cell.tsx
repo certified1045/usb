@@ -2,6 +2,7 @@ import { EditUserSchema } from "@/helpers/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -50,6 +51,7 @@ export function Cell({ row }: { row: { original: IUser } }) {
   });
 
   const [openUserDetails, setOpenUserdetails] = useState(false);
+  const router = useRouter();
 
   async function onSubmit({
     email,
@@ -293,6 +295,13 @@ export function Cell({ row }: { row: { original: IUser } }) {
         <DropdownMenuItem onClick={() => setOpenUserdetails(true)}>
           Edit user details
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() =>
+            router.push(`/admin/users/transactions/${row.original.account_no}`)
+          }
+        >
+          Add/Edit transactions
+        </DropdownMenuItem>
         {/* <DropdownMenuItem>Edit user details</DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -302,10 +311,6 @@ export function Cell({ row }: { row: { original: IUser } }) {
 export const VerifyOptions = ({ original }: { original: IUser }) => {
   const { getAllUsers } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [docImg, setDocImg] = useState("");
-
-  console.log({ original });
 
   const verify = async (account_no: number) => {
     setLoading(true);

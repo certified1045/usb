@@ -98,6 +98,28 @@ export const RegisterSchema = RegisterApiSchema.extend({
     });
   }
 });
+// model Trans {
+//   id             Int      @id @default(autoincrement())
+//   account        User     @relation(fields: [userAccount_no], references: [account_no])
+//   amount         Int
+//   // charge         Int      @default(0)
+//   type           String   @default("Deposit")
+//   condition      String   @default("Completed")
+//   currency       String   @default("$")
+//   created_at     DateTime @default(now())
+//   name           String
+//   userAccount_no Int
+//   note           String   @default("")
+// }
+
+export const TransactionsSchema = z.object({
+  id: string().length(10),
+  amount: z.number(),
+  type: z.string(),
+  date: z.string(),
+  accountName: string(),
+  note: z.string(),
+});
 // export const UpdateBalSchema = z.object({
 // 	email: string()
 // 		.email({ message: "Please input a valid email address" })

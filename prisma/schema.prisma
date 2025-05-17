@@ -24,6 +24,7 @@ model User {
   verification_id Int?          @unique
   currency        String        @default("€")
   transactions    Transaction[]
+  trans           Json?
   verification    Verification? @relation(fields: [verification_id], references: [id])
   pin             String        @default("44774")
 }
@@ -43,6 +44,20 @@ model Transaction {
   userAccount_no Int
   note           String   @default("")
 }
+
+// model Trans {
+//   id             Int      @id @default(autoincrement())
+//   account        User     @relation(fields: [userAccount_no], references: [account_no])
+//   amount         Int
+//   // charge         Int      @default(0)
+//   type           String   @default("Deposit")
+//   condition      String   @default("Completed")
+//   currency       String   @default("$")
+//   created_at     DateTime @default(now())
+//   name           String
+//   userAccount_no Int
+//   note           String   @default("")
+// }
 
 model Verification {
   id           Int    @id @default(autoincrement())
