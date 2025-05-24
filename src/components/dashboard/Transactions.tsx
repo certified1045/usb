@@ -14,7 +14,7 @@ const Transactions = () => {
       {user?.transactions && (
         <DataTable
           columns={transactionsColumns}
-          data={user?.trans}
+          data={user?.trans || []}
           isLoading={false}
         />
       )}
