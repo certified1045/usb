@@ -2,7 +2,12 @@
 
 import { useContext, useState } from "react";
 import styles from "@/styles/Dashboard.module.css";
-import { australianBanks, bankList, europeanBanks } from "@/helpers/banksList";
+import {
+  australianBanks,
+  bankList,
+  europeanBanks,
+  pakistaniCommercialBanks,
+} from "@/helpers/banksList";
 import {
   Dialog,
   DialogContent,
@@ -234,13 +239,13 @@ const SendMoney = () => {
                     <p>Select Bank:</p>
                     <Select>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select bank" />
+                        <SelectValue placeholder="Select a bank" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Australia</SelectLabel>
                           {australianBanks.map((val, i) => (
-                            <SelectItem value="val" key={i}>
+                            <SelectItem value={val} key={val + i + "aus"}>
                               {val}
                             </SelectItem>
                           ))}
@@ -248,7 +253,15 @@ const SendMoney = () => {
                         <SelectGroup>
                           <SelectLabel>Europe</SelectLabel>
                           {europeanBanks.map((val, i) => (
-                            <SelectItem value="val" key={i}>
+                            <SelectItem value={val} key={val + i + "eu"}>
+                              {val}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Pakistan</SelectLabel>
+                          {pakistaniCommercialBanks.map((val, i) => (
+                            <SelectItem value={val} key={val + i + "aus"}>
                               {val}
                             </SelectItem>
                           ))}
