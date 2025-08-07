@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "@/styles/Services.module.css";
 import { IoIosSend } from "react-icons/io";
 import {
@@ -11,11 +10,11 @@ import { GiPayMoney } from "react-icons/gi";
 
 const Services = () => {
   return (
-    <section className={styles.services} id="services">
+    <section className="py-24 px-4 sm:px-8 md:px-24 bg-[#f4f9fc]" id="services">
       <h1>Our Services</h1>
       <div className="line"></div>
 
-      <p className="tac">You can choose any of our services</p>
+      <p className="text-center">You can choose any of our services</p>
       <div className={styles.boxCon}>
         <div className={styles.box}>
           <span className={styles.flex}>

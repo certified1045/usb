@@ -1,23 +1,14 @@
 .navbarItems {
-  /* height: 56px; */
-  /* background-color: white; */
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  /* font-size: 0.7rem; */
-  /* z-index: 10; */
 }
-
-/* .navbarItems * {
-    z-index: 0;
-  } */
 
 .patty {
   position: relative;
   height: 2px;
   width: 20px;
-  /* background-color: var(--color-blue); */
   background-color: red;
 }
 
@@ -28,7 +19,6 @@
   left: 0;
   height: 2px;
   width: 100%;
-  /* background-color: var(--color-blue); */
   background-color: red;
 }
 
@@ -39,7 +29,6 @@
   left: 0;
   height: 2px;
   width: 100%;
-  /* background-color: var(--color-blue); */
   background-color: red;
 }
 
@@ -55,14 +44,6 @@
 
 .patty.active::after {
   transform: rotate(45deg) translate(-5px, 2.3px) scaleX(0.5);
-}
-
-.hide {
-  display: none;
-}
-
-.navbarLogo {
-  /* margin: -29px; */
 }
 
 .navMenu {
@@ -103,21 +84,6 @@
   color: black;
 }
 
-.cart {
-  display: none;
-  color: #0e494e;
-  font-size: 35px;
-}
-
-.btn {
-  border: 1px solid var(--secondary-color);
-  border-radius: 5px;
-  color: var(--secondary-colorm);
-  padding: 7px 3px;
-  white-space: nowrap;
-  background: none;
-}
-
 @media (min-width: 600px) and (max-width: 800px) {
   .navLinks {
     padding: 0.5rem 42px;
@@ -135,7 +101,6 @@
     width: 500px;
     position: static;
     flex-direction: row;
-    align-items: baseline;
   }
 
   .navLinks {
@@ -157,8 +122,5 @@
 
   .menuIcon {
     display: none;
-  }
-  .cart {
-    display: block;
   }
 }

@@ -1,13 +1,12 @@
-import Footer from "@/components/Footer";
-import Nav from "@/components/header/Nav";
 import { Metadata } from "next";
 import "@/styles/globals.css";
 import { AuthProvider } from "@/components/AuthContext";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: "Capital Springs Bank",
-  description: "Capital Springs Bank Bank",
+  description: "Capital Springs Bank",
 };
 
 export default function RootLayout({
@@ -19,13 +18,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          {/* <header>
-            <Nav />
-          </header>
-          <main>{children}</main> */}
-          <AdminLayout>{children}</AdminLayout>
+          <TooltipProvider>
+            {children}
+            <Toaster richColors toastOptions={{}} theme="light" />
+          </TooltipProvider>
         </AuthProvider>
-        <Footer />
       </body>
     </html>
   );

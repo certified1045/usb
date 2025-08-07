@@ -1,109 +1,156 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import styles from '@/styles/Form.module.css';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateUserSchema, CreateUserSchemaType } from '@/helpers/schema';
-import { useRouter } from 'next/navigation';
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
-import { API_URL } from '@/helpers/vars';
+import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateUserSchema, CreateUserSchemaType } from "@/helpers/schema";
+import { Loader } from "lucide-react";
+import { toast } from "sonner";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+// import metadata from "libphonenumber-js/metadata.min";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import AuthContext from "@/components/AuthContext";
 
 const Register = () => {
-  const [error, setError] = useState(null) as any;
-  const [phoneNumber, setPhoneNumber] = useState('') as any;
-
-  const router = useRouter();
+  const [phoneNumber, setPhoneNumber] = useState<string | undefined>(undefined);
+  const { getAllUsers } = useContext(AuthContext);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting }
+    reset,
+    setError,
+    formState: { errors, isSubmitting },
   } = useForm<CreateUserSchemaType>({
-    resolver: zodResolver(CreateUserSchema)
+    resolver: zodResolver(CreateUserSchema),
   });
   const signUp = async ({ email, password, fullName }: any) => {
-    if (navigator && navigator.onLine) {
-      const res = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
+    try {
+      const res = await fetch("/api/v1/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email,
           password,
           phoneNumber,
-          fullName
-        })
+          fullName,
+        }),
       });
       const data = await res.json();
       if (res.ok) {
-        console.log(data);
-        router.push('/');
+        toast.success("User created successfully");
+        reset();
+        setPhoneNumber(undefined);
+        getAllUsers!();
+      } else if (data?.field) {
+        setError(data.field, { message: data?.message });
+        return;
       } else {
-        setError(data.message);
-        error ?? console.log(error);
+        toast.error("Ooops, Something went wrong", {
+          description: data.message,
+        });
       }
-    } else {
-      setError('You appear to be offline. Check your internet connection');
-      console.log('error');
+    } catch (err) {
+      toast.error("Ooops, Something went wrong");
     }
   };
 
   return (
-    <div className={styles.form}>
-      {error ? <h6 className={styles.error}>{error}</h6> : <span></span>}
-      <h6>Add a New User</h6>
-      <form onSubmit={handleSubmit(signUp)} method='POST'>
-        <input type='text' {...register('fullName')} placeholder='Full Name' />
-        <span className={styles.error}> {errors.fullName?.message}</span>
-        <input
-          type='email'
-          placeholder='E-mail Address'
-          required={false}
-          {...register('email')}
-        />
-        <span className={styles.error}> {errors.email?.message}</span>
-        {/* <input
-						type="number"
-						placeholder="Phone number"
-						{...register("phoneNumber")}
-					/> */}
-        <PhoneInput
-          // name="PhoneInputWithCountrySelect"
-          // control={control}
-          rules={{ required: true }}
-          placeholder='Phone Number'
-          // {...register("phoneNumber")}
-          value={phoneNumber}
-          // onChange={(e) => {
-          // 	console.log(e.target);
-          // 	setPhoneNumnber(e.target);
-          // }}
-          required={false}
-          onChange={setPhoneNumber}
-        />
-        <span className={styles.error}> {errors.phoneNumber?.message}</span>
-        <input
-          type='password'
-          placeholder='Password'
-          {...register('password')}
-        />
-        <span className={styles.error}> {errors.password?.message}</span>
-        <input
-          type='password'
-          placeholder='Confirm Password'
-          {...register('confirm_password')}
-        />
-        <span className={styles.error}>
-          {' '}
-          {errors.confirm_password?.message}
-        </span>
-        <button type='submit' disabled={isSubmitting}>
-          Create Account
-        </button>
-      </form>
+    <div className="flex flex-col gap-6">
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Add a new user</CardTitle>
+          {/* <CardDescription>Create an account</CardDescription> */}
+        </CardHeader>
+        <CardContent>
+          <form
+            onSubmit={handleSubmit(signUp)}
+            method="POST"
+            className="grid gap-5"
+          >
+            <div className="grid gap-2">
+              <Label htmlFor="fullName">Full name</Label>
+              <Input
+                id="fullName"
+                type="text"
+                {...register("fullName")}
+                placeholder="John Doe"
+              />
+              {errors?.fullName?.message && (
+                <span className="text-orange-700 text-sm">
+                  {errors?.fullName?.message}
+                </span>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="text"
+                {...register("email")}
+                placeholder="johndoe@example.com"
+              />
+              {errors?.email?.message && (
+                <span className="text-orange-700 text-sm">
+                  {errors?.email?.message}
+                </span>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Phone number</Label>
+              <PhoneInput
+                {...register("phoneNumber")}
+                value={phoneNumber}
+                placeholder="Phone Number"
+                onChange={(e) => setPhoneNumber(e?.toString())}
+              />
+              {errors?.phoneNumber?.message && (
+                <span className="text-orange-700 text-sm">
+                  {errors?.phoneNumber?.message}
+                </span>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Password"
+                {...register("password")}
+              />
+              {errors?.password?.message && (
+                <span className="text-orange-700 text-sm">
+                  {errors?.password?.message}
+                </span>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="confirmPassword">Confirm password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                {...register("confirm_password")}
+              />
+              {errors?.confirm_password?.message && (
+                <span className="text-orange-700 text-sm">
+                  {errors?.confirm_password?.message}
+                </span>
+              )}
+            </div>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting && <Loader className="animate-spin" />}
+              Create My Account
+            </Button>
+          </form>
+        </CardContent>{" "}
+      </Card>
     </div>
   );
 };

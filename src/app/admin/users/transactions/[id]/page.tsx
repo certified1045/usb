@@ -1,12 +1,21 @@
-import { getUser } from "@/actions";
+"use client";
+
+import { useContext } from "react";
+import { useParams } from "next/navigation";
+
+// import { getUser } from "@/actions";
+import AuthContext from "@/components/AuthContext";
 import CreateTransactions from "./trans-table";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
-const page = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = await params;
-  const user = await getUser(id);
-  console.log({ trrr: user });
+const page = () => {
+  const params = useParams();
+  const { id } = params;
+  const { users, getAllUsers } = useContext(AuthContext);
+
+  // const user = await getUser(id);
+  const user = users?.filter((user) => user.account_no == +id!) || [];
 
   return (
     <div>
@@ -14,8 +23,9 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         <p key={i}>{e}</p>
       ))} */}
       <CreateTransactions
-        trans={user?.user?.trans || []}
-        id={user.user?.account_no!}
+        trans={user[0]?.trans || []}
+        id={user[0]?.account_no!}
+        getAllUsers={getAllUsers!}
       />
     </div>
   );

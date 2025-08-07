@@ -16,16 +16,30 @@ export async function middleware(req: NextRequest) {
     if (path.startsWith("/login") || path.startsWith("/register")) {
       return NextResponse.next();
     }
-    if (path.startsWith("/api/admin") || path.startsWith("/api/auth/logout")) {
+    if (
+      path.startsWith("/api/v1/admin") ||
+      path.startsWith("/api/v1/auth/logout")
+    ) {
       return getErrorResponse(401, "You are not logged in");
     }
-    if (path.startsWith("/admin") || path.startsWith("/dashboard")) {
-      return NextResponse.redirect(
-        new URL(
-          `/login?${new URLSearchParams({ message: "Invalid credentials" })}`,
-          req.url
-        )
+    if (path.startsWith("/dashboard")) {
+      const response = NextResponse.redirect(new URL("/", req.url));
+      response.cookies.set("toastMessage", "Invalid credentials!", {
+        path: "/",
+        maxAge: 60,
+      });
+      response.cookies.set("toastType", "error", { path: "/", maxAge: 60 }); // Set toast type (e.g., success, error)
+      return response;
+    }
+    if (path.startsWith("/admin")) {
+      const response = NextResponse.redirect(new URL("/", req.url));
+      response.cookies.set(
+        "toastMessage",
+        "You are unauthorised to view this page!",
+        { path: "/", maxAge: 60 }
       );
+      response.cookies.set("toastType", "error", { path: "/", maxAge: 60 }); // Set toast type (e.g., success, error)
+      return response;
     }
   }
   const response = NextResponse.next();
@@ -42,16 +56,22 @@ export async function middleware(req: NextRequest) {
       //   (req as AuthenticatedRequest).user = decodedToken;
       if (!decodedToken.is_admin && path.startsWith("/admin")) {
         // TODO redirect to unauthorised page
-        return NextResponse.redirect(
-          new URL(
-            `/login?${new URLSearchParams({
-              message: "Invalid admin credentials",
-            })}`,
-            req.url
-          )
+        const response = NextResponse.redirect(new URL("/", req.url));
+        response.cookies.set(
+          "toastMessage",
+          "You are unauthorised to view this page!",
+          { path: "/", maxAge: 60 }
         );
+        // return NextResponse.redirect(
+        //   new URL(
+        //     `/login?${new URLSearchParams({
+        //       message: "Invalid admin credentials",
+        //     })}`,
+        //     req.url
+        //   )
+        // );
       }
-      if (!decodedToken.is_admin && path.startsWith("/api/admin")) {
+      if (!decodedToken.is_admin && path.startsWith("/api/v1/admin")) {
         return getErrorResponse(403, "You are not authorised for this action");
       }
       // if (decodedToken.is_admin && path.startsWith('/login')) {
@@ -83,19 +103,19 @@ export async function middleware(req: NextRequest) {
     });
     return response;
   }
-  const authUser = (req as AuthenticatedRequest).user;
+  // const authUser = (req as AuthenticatedRequest).user;
 
-  if (
-    req.nextUrl.pathname.startsWith("/login") ||
-    (req.nextUrl.pathname.startsWith("/register") && authUser)
-  ) {
-    return NextResponse.redirect(
-      new URL(
-        `/?${new URLSearchParams({ message: "You are already logged in" })}`,
-        req.url
-      )
-    );
-  }
+  // if (
+  //   req.nextUrl.pathname.startsWith("/login") ||
+  //   (req.nextUrl.pathname.startsWith("/register") && authUser)
+  // ) {
+  //   return NextResponse.redirect(
+  //     new URL(
+  //       `/?${new URLSearchParams({ message: "You are already logged in" })}`,
+  //       req.url
+  //     )
+  //   );
+  // }
   return response;
 }
 
@@ -107,8 +127,8 @@ export const config = {
     "/dashboard/:path*",
     "/admin",
     "/admin/:path*",
-    "/api/admin/:path*",
-    "/api/auth/logout",
-    "/api/admin",
+    "/api/v1/admin/:path*",
+    "/api/v1/auth/logout",
+    "/api/v1/admin",
   ],
 };

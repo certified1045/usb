@@ -2,36 +2,57 @@ import { TransactionsSchema } from "@/helpers/schema";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { z } from "zod";
-import { IUser } from "../AuthContext";
 import { Cell, VerifyOptions } from "./cell";
+import type { User } from "@/db/schema/schema";
+import { ArrowDown, ArrowUpRight, ArrowUpRightFromCircle } from "lucide-react";
 
 export const transactionsColumns: ColumnDef<
   z.infer<typeof TransactionsSchema>
 >[] = [
   {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ getValue }) => {
-      return <div>{format(getValue(), "PPP")}</div>;
-    },
-  },
-  {
     header: "Description",
     cell: ({ row }) => {
       return (
-        <div>
-          {row.original.accountName} - {row.original.note}
+        <div className="flex gap-2 items-center max-w-80">
+          <span
+            className={`p-2 rounded-full ${
+              row.original.type == "Deposit"
+                ? "bg-purple-200/50"
+                : "bg-green-200/50"
+            }`}
+          >
+            {row.original.type == "Deposit" ? (
+              <ArrowDown size={12} className="text-purple-700" />
+            ) : (
+              <ArrowUpRight size={12} className="text-green-700" />
+            )}
+          </span>
+          <div className="line-clamp-1">{row.original.description}</div>
         </div>
       );
     },
   },
   {
-    accessorKey: "id",
-    header: "Ref.",
+    accessorKey: "category",
+    header: "Category",
+    cell: ({ getValue }) => {
+      return (
+        <div className="text-xs p-1 rounded-md bg-border w-fit">
+          {getValue() as string}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ getValue }) => {
+      return <div>{format(getValue() as string, "PPP")}</div>;
+    },
   },
   {
     accessorKey: "amount",
-    header: "Amount ($)",
+    header: "Amount",
     cell: ({ row }) => {
       return (
         <div
@@ -41,7 +62,8 @@ export const transactionsColumns: ColumnDef<
               : "text-orange-700"
           }`}
         >
-          {row.original.type == "Withdrawal" && "-"}{" "}
+          {row.original.type == "Withdrawal" ? "-" : "+"}
+          {"$"}
           {row.original.amount.toLocaleString()}
         </div>
       );
@@ -72,7 +94,7 @@ export const loanColumns = [
   },
 ];
 
-export const UsersColumns: ColumnDef<IUser>[] = [
+export const UsersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "account_no",
     header: "A/C Number",
@@ -95,17 +117,9 @@ export const UsersColumns: ColumnDef<IUser>[] = [
     cell: ({ row }) => {
       const date = new Date(row.getValue("created_at"));
       // date.toISOString().substring(0, 10);
-      console.log({ verified: row.getValue("verified"), date });
       return <div>{date.toISOString().slice(0, 10)}</div>;
     },
   },
-  // {
-  //   accessorKey: "verified",
-  //   header: "Status",
-  //   cell: ({ row }) => (
-  //     <div>{!!row.getValue("verified") ? "Verified" : "Unverified"}</div>
-  //   ),
-  // },
   {
     id: "actions",
     enableHiding: false,
@@ -115,7 +129,7 @@ export const UsersColumns: ColumnDef<IUser>[] = [
   },
 ];
 
-export const VerifyColumns: ColumnDef<IUser>[] = [
+export const VerifyColumns: ColumnDef<User>[] = [
   {
     accessorKey: "account_no",
     header: "A/C Number",

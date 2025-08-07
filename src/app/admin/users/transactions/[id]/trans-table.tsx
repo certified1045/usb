@@ -10,7 +10,7 @@ import {
   RowData,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TransactionsSchema } from "@/helpers/schema";
 import { z } from "zod";
-import { CalendarIcon, Plus, X } from "lucide-react";
+import { CalendarIcon, Loader, Plus, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -33,7 +33,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SelectGroup } from "@radix-ui/react-select";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
   PopoverContent,
@@ -41,6 +40,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 // import { Link, useLocation } from "react-router-dom";
 
 declare module "@tanstack/react-table" {
@@ -55,7 +56,6 @@ const defaultColumn: Partial<ColumnDef<z.infer<typeof TransactionsSchema>>> = {
     const initialValue = getValue();
     // We need to keep and update the state of the cell normally
     const [value, setValue] = useState(initialValue);
-
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
       table.options.meta?.updateData(index, id, value);
@@ -65,21 +65,18 @@ const defaultColumn: Partial<ColumnDef<z.infer<typeof TransactionsSchema>>> = {
     useEffect(() => {
       setValue(initialValue);
     }, [initialValue]);
-    if (id == "fullName") {
-      return <span className="capitalize">{value as string}</span>;
-    } else {
-      return (
-        <Input
-          className="out-of-range:border-red-600"
-          required
-          value={value as string}
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
-          onBlur={onBlur}
-        />
-      );
-    }
+    return (
+      <Input
+        className="out-of-range:border-red-600"
+        type={id == "amount" ? "number" : "text"}
+        required
+        value={value as string}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+        onBlur={onBlur}
+      />
+    );
   },
 };
 
@@ -102,20 +99,15 @@ function useSkipper() {
 export default function CreateTransactions({
   trans,
   id,
+  getAllUsers,
 }: {
-  trans: z.infer<typeof TransactionsSchema>;
+  trans: z.infer<typeof TransactionsSchema>[];
   id: number;
+  getAllUsers: () => Promise<void>;
 }) {
   const [data, setData] = useState<z.infer<typeof TransactionsSchema>[]>(trans);
 
   const [loading, setLoading] = useState(false);
-  console.log({ trans });
-
-  const updateAmount = (index: number, newValue: number) => {
-    const newItems = [...data]; // Create a copy of the array
-    newItems[index].amount = newValue; // Modify the copy
-    setData(newItems); // Update the state with the new array
-  };
 
   const updateType = (index: number, newValue: string) => {
     const newItems = [...data]; // Create a copy of the array
@@ -123,46 +115,26 @@ export default function CreateTransactions({
     setData(newItems); // Update the state with the new array
   };
 
-  const updateDate = (index: number, newValue: string) => {
+  const updateCategory = (index: number, newValue: string) => {
+    const newItems = [...data]; // Create a copy of the array
+    newItems[index].category = newValue; // Modify the copy
+    setData(newItems); // Update the state with the new array
+  };
+
+  const updateDate = (index: number, newValue: Date) => {
     const newItems = [...data]; // Create a copy of the array
     newItems[index].date = newValue; // Modify the copy
     setData(newItems); // Update the state with the new array
   };
-  const updateNote = (index: number, newValue: string) => {
-    const newItems = [...data]; // Create a copy of the array
-    newItems[index].note = newValue; // Modify the copy
-    setData(newItems); // Update the state with the new array
-  };
 
-  const columns = [
+  const columns: ColumnDef<z.infer<typeof TransactionsSchema>>[] = [
     {
-      accessorKey: "id",
-      header: () => <span>Transaction ID</span>,
-    },
-    {
-      accessorKey: "accountName",
-      header: () => <span>Account name</span>,
+      accessorKey: "description",
+      header: () => <span>Description</span>,
     },
     {
       accessorKey: "amount",
       header: () => <span>Amount</span>,
-      cell: ({ getValue, row }) => {
-        const initialValue = getValue();
-        const [value, setValue] = useState(initialValue);
-        useEffect(() => {
-          setValue(initialValue);
-        }, [initialValue]);
-        return (
-          <Input
-            type="number"
-            onChange={(e) => {
-              setValue(e.target.value);
-              updateAmount(row.index, +e.target.value);
-            }}
-            value={value as string}
-          />
-        );
-      },
     },
     {
       accessorKey: "type",
@@ -197,10 +169,45 @@ export default function CreateTransactions({
       },
     },
     {
+      accessorKey: "category",
+      header: () => <span>Category</span>,
+      cell: ({ getValue, row }) => {
+        const initialValue = getValue();
+        const [value, setValue] = useState(initialValue);
+        useEffect(() => {
+          setValue(initialValue);
+        }, [initialValue]);
+        return (
+          <Select
+            value={value as string}
+            onValueChange={(val) => {
+              setValue(val);
+              updateCategory(row.index, val);
+            }}
+            required
+          >
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Category</SelectLabel>
+                <SelectItem value="Transfer">Transfer</SelectItem>
+                <SelectItem value="Shopping">Shopping</SelectItem>
+                <SelectItem value="Subcription">Subcription</SelectItem>
+                <SelectItem value="Internet">Internet</SelectItem>
+                <SelectItem value="Electricity">Electricity</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        );
+      },
+    },
+    {
       accessorKey: "date",
       header: "Date",
       cell: ({ getValue, row }) => {
-        const initialValue = getValue();
+        const initialValue = getValue() as Date;
         const [value, setValue] = useState(initialValue);
         useEffect(() => {
           setValue(initialValue);
@@ -224,35 +231,14 @@ export default function CreateTransactions({
                 mode="single"
                 selected={value}
                 onSelect={(e) => {
-                  updateDate(row.index, e);
-                  setValue(e);
+                  updateDate(row.index, e!);
+                  setValue(e!);
                 }}
                 required
                 initialFocus
               />
             </PopoverContent>
           </Popover>
-        );
-      },
-    },
-    {
-      accessorKey: "note",
-      header: "Note",
-      cell: ({ getValue, row }) => {
-        const initialValue = getValue();
-        const [value, setValue] = useState(initialValue);
-        useEffect(() => {
-          setValue(initialValue);
-        }, [initialValue]);
-        return (
-          <Input
-            onChange={(e) => {
-              updateNote(row.index, e.target.value);
-              setValue(e.target.value);
-            }}
-            value={value as string}
-            placeholder="Add note (optional)"
-          />
         );
       },
     },
@@ -275,15 +261,6 @@ export default function CreateTransactions({
       },
     },
   ];
-
-  //   const studentData = [
-  //     {
-  //       _id: "66a687d64c92cafaed484ace",
-  //       fullName: "hope oboite",
-  //       username: "hope2024",
-  //       __v: 0,
-  //     },
-  //   ];
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 
@@ -316,15 +293,34 @@ export default function CreateTransactions({
     debugTable: true,
   });
 
-  const handleSubmit = async () => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    // const formValues = Object.fromEntries(e.currentTarget);
+    const results = TransactionsSchema.extend({}).array().safeParse(data);
+    console.log({ results });
+    if (results.error) {
+      toast.error(results.error.issues[0].message);
+      return;
+    }
     try {
+      console.log({ data });
       setLoading(true);
-      const res = await fetch(`/api/admin/${id}/add-transactions`, {
+      const res = await fetch(`/api/v1/admin/${id}/add-transactions`, {
         method: "PUT",
-        body: JSON.stringify({ data }),
+        body: JSON.stringify({ data: results.data }),
       });
+      const response = await res.json();
+      if (res.ok) {
+        getAllUsers();
+        toast.success("Transactions updated successfully");
+        router.back();
+      } else {
+        toast.error(response?.message || "Something went wrong");
+      }
     } catch (err) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -332,7 +328,7 @@ export default function CreateTransactions({
 
   return (
     <>
-      <form className="p-2" onSubmit={(e) => e.preventDefault()}>
+      <form className="p-2" onSubmit={handleSubmit}>
         <h1 className="text-2xl mb-6 font-medium">Add transactions</h1>
         <Table>
           <TableHeader className="bg-primary text-primary-foreground">
@@ -382,11 +378,10 @@ export default function CreateTransactions({
             setData((oldData) => [
               ...oldData,
               {
-                accountName: "",
                 amount: 0,
                 date: "",
-                id: "",
-                note: "",
+                category: "",
+                description: "",
                 type: "",
               },
             ]);
@@ -398,14 +393,19 @@ export default function CreateTransactions({
         >
           <Plus />
         </Button>
-        <Button
-          type="submit"
-          onClick={() => handleSubmit()}
-          disabled={loading}
-          className="mt-6 block"
-        >
-          Create transactions
-        </Button>
+        <div className="flex gap-3 relative top-10 items-center">
+          <Button type="button" variant="outline" onClick={() => router.back()}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            // onClick={() => handleSubmit()}
+            disabled={loading || data?.length == 0}
+          >
+            {loading && <Loader className="animate-spin mr-1" size={16} />}
+            Create transactions
+          </Button>
+        </div>
       </form>
     </>
   );

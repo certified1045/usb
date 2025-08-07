@@ -1,3 +1,4 @@
+import { User } from "@/db/schema/schema";
 import { EditUserSchema } from "@/helpers/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, MoreHorizontal } from "lucide-react";
@@ -7,7 +8,7 @@ import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import AuthContext, { IUser } from "../AuthContext";
+import AuthContext from "../AuthContext";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -38,8 +39,9 @@ import {
 } from "../ui/sheet";
 import { Switch } from "../ui/switch";
 
-export function Cell({ row }: { row: { original: IUser } }) {
+export function Cell({ row }: { row: { original: User } }) {
   const index = (row.original.account_no - 1002784563).toString();
+  console.log({ index });
   const form = useForm<z.infer<typeof EditUserSchema>>({
     resolver: zodResolver(EditUserSchema),
     defaultValues: {
@@ -61,7 +63,7 @@ export function Cell({ row }: { row: { original: IUser } }) {
     verified,
     password,
   }: z.infer<typeof EditUserSchema>) {
-    const res = await fetch(`/api/admin/${index}`, {
+    const res = await fetch(`/api/v1/admin/${index}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -83,9 +85,8 @@ export function Cell({ row }: { row: { original: IUser } }) {
       setOpenUserdetails(false);
     } else {
       toast.error("Unable to update user details", {
-        description: "Something went wrong",
+        description: data?.message || "Something went wrong",
       });
-      alert(data.message);
     }
   }
 
@@ -308,13 +309,13 @@ export function Cell({ row }: { row: { original: IUser } }) {
   );
 }
 
-export const VerifyOptions = ({ original }: { original: IUser }) => {
+export const VerifyOptions = ({ original }: { original: User }) => {
   const { getAllUsers } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const verify = async (account_no: number) => {
     setLoading(true);
-    const res = await fetch("/api/admin/verify-doc", {
+    const res = await fetch("/api/v1/admin/verify-doc", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -328,11 +329,13 @@ export const VerifyOptions = ({ original }: { original: IUser }) => {
     console.log(data);
     setLoading(false);
     if (res.ok) {
-      alert("User verified successfully");
-      getAllUsers();
+      toast.success("User verified successfully");
+      getAllUsers!();
       console.log(data);
     } else {
-      alert("unsuccessful");
+      toast.error("Verification unsuccessful", {
+        description: "Something went wrong",
+      });
     }
   };
 
@@ -366,10 +369,10 @@ export const VerifyOptions = ({ original }: { original: IUser }) => {
                   <Image
                     src={original.verification?.identity_doc}
                     alt="Verification document"
-                    // fill
                     className="h-full w-full"
                     height={240}
                     width={240}
+                    priority
                   />
                 </div>
                 {/* <Image
@@ -394,6 +397,7 @@ export const VerifyOptions = ({ original }: { original: IUser }) => {
                     className="h-full w-full"
                     height={240}
                     width={240}
+                    priority
                   />
                 </div>
               </PopoverContent>

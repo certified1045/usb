@@ -5,7 +5,7 @@ export const signJwt = async (payload: {
   is_admin: boolean;
 }) => {
   try {
-    const secret = new TextEncoder().encode("process.env.JWT_SECRET");
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
     return new SignJWT(payload)
       .setProtectedHeader({ alg })
@@ -21,7 +21,7 @@ export const signJwt = async (payload: {
 export const verifyJWT = async <T>(token: string): Promise<T> => {
   try {
     return (
-      await jwtVerify(token, new TextEncoder().encode("process.env.JWT_SECRET"))
+      await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET))
     ).payload as any;
   } catch (error) {
     console.log(error);

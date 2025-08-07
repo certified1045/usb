@@ -1,5 +1,14 @@
-import Dashboard from '@/components/admin/Dashboard';
+"use client";
+
+import AuthContext from "@/components/AuthContext";
+import Home from "@/components/dashboard/Home";
+import { useContext } from "react";
 
 export default function Admin() {
-  return <Dashboard />;
+  const { user } = useContext(AuthContext);
+  return (
+    <div className="px-1 pb-6 bg-background">
+      <Home />
+    </div>
+  );
 }

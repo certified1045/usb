@@ -10,7 +10,6 @@
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
   --primary: 221.2 83.2% 53.3%;
-  /* --primary: 227 96% 27%; */
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96.1%;
   --secondary-foreground: 222.2 47.4% 11.2%;
@@ -96,22 +95,15 @@ body {
   overflow-x: hidden;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
-  color: #6f8ba4;
+  /* color: #6f8ba4; */
   scroll-behavior: smooth;
 }
-
-section,
 footer {
   padding: 90px 100px;
 }
 
 /* * {
 	outline: 1px solid #f00 !important;
-} */
-
-/* nav {
-  background: white;
-  padding: 10px 100px;
 } */
 
 h1,
@@ -157,34 +149,6 @@ a {
   color: #007bff;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="email"],
-/* input[type="number"], */
-input[type="datetime-local"],
-input[type="text"]:focus,
-input[type="password"]:focus,
-select,
-input[type="email"]:focus {
-  border: 1px solid #eef2f6;
-  margin-bottom: 15px;
-  width: 100%;
-  border-radius: 5px;
-  height: 45px;
-  text-align: center;
-  background: #f4f9fc;
-}
-textarea {
-  border: 1px solid #eef2f6;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  width: 100%;
-  outline: none;
-  height: 170px;
-  text-align: center;
-  background: #f4f9fc;
-}
-
 .grey {
   color: rgba(255, 255, 255, 0.09);
 }
@@ -206,7 +170,6 @@ textarea {
 }
 
 .btnIcon:hover {
-  /* transform: scale(1.5);  */
   background-color: var(--hover-color);
   z-index: 20;
 }
@@ -218,26 +181,6 @@ textarea {
   gap: 25px;
   width: 100%;
   flex-wrap: wrap;
-}
-
-.flex-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 58px;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
-}
-
-.tac {
-  text-align: center;
-}
-
-.mt70 {
-  margin-top: 70px;
-}
-.m_0 {
-  margin: 0 !important;
 }
 
 .logo {
@@ -266,8 +209,6 @@ textarea {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  height: 45px;
-  margin-bottom: 15px;
 }
 .PhoneInputCountrySelect {
   width: 100%;
@@ -276,33 +217,30 @@ textarea {
   margin-bottom: 15px;
   border-radius: 5px;
   text-align: center;
-  background: #f4f9fc;
+  border: 1px solid hsl(var(--border));
   color: black;
 }
 .PhoneInputInput {
   width: 68%;
-  height: 100%;
-  border: 1px solid #eef2f6;
-  margin-bottom: 15px;
+  height: 36px;
+  border: 2px solid #eef2f6;
   border-radius: 5px;
   text-align: center;
-  background: #f4f9fc;
+  outline: hsl(var(--primary));
+  border-radius: 6px;
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
-/* @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-} */
 
 @media screen and (max-width: 800px) {
-  section,
   footer {
     padding: 90px 2rem;
   }
 }
 
 @media screen and (max-width: 600px) {
-  section,
   footer {
     padding: 90px 1rem;
   }
@@ -310,11 +248,6 @@ textarea {
     flex-direction: column;
   }
 }
-/* @media (prefers-color-scheme: dark) {
-  input {
-    color: black;
-  }
-} */
 
 :nth-child(1) {
   --index: 1;
@@ -351,22 +284,6 @@ textarea {
   border-color: transparent transparent var(--secondary-color) transparent;
 }
 
-/* .border-tooltip-dark::after {
-  border-color: transparent transparent #fff transparent;
-} */
-
-.gtc {
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-}
-
-.modal {
-  box-shadow: 0px -258px 7px 20000px #000000bf;
-}
-
-.custom-shadow {
-  box-shadow: inset 0px 0px 5px 2px #12882c24;
-}
-
 .flip {
   animation: flip 2s infinite;
   animation-delay: calc(0.2s * var(--index)) !important;
@@ -377,43 +294,5 @@ textarea {
   80% {
     /* transform: rotateY(360deg); */
     transform: matrix(1, 0, 0, 1, 13, 0);
-  }
-}
-
-.lds {
-  display: inline-block;
-  position: relative;
-  width: 12px;
-  height: 12px;
-}
-.lds div {
-  display: inline-block;
-  position: absolute;
-  /* left: 2px; */
-  width: 4px;
-  background: #fff;
-  animation: lds 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-}
-.lds div:nth-child(1) {
-  left: 0px;
-  animation-delay: -0.24s;
-}
-.lds div:nth-child(2) {
-  left: 6px;
-  animation-delay: -0.12s;
-}
-.lds div:nth-child(3) {
-  left: 12px;
-  animation-delay: 0;
-}
-@keyframes lds {
-  0% {
-    top: 0px;
-    height: 16px;
-  }
-  50%,
-  100% {
-    top: 8px;
-    height: 10px;
   }
 }

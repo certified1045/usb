@@ -1,4 +1,4 @@
-export const bankList = [
+const bankList = [
   "Ally Bank",
   "American Express National Bank",
   "Axos Bank",
@@ -162,25 +162,4 @@ export const australianBanks = [
   "Westpac",
 ];
 
-export const pakistaniCommercialBanks = [
-  "Allied Bank Limited",
-  "Askari Bank Limited",
-  "Bank AL Habib Limited",
-  "Bank Alfalah Limited",
-  "Bank Islami Pakistan Limited",
-  "Faysal Bank Limited",
-  "First Women Bank Limited",
-  "Habib Bank Limited (HBL)",
-  "Habib Metropolitan Bank Limited",
-  "JS Bank Limited",
-  "MCB Bank Limited",
-  "Meezan Bank Limited",
-  "National Bank of Pakistan (NBP)",
-  "Sindh Bank Limited",
-  "Soneri Bank Limited",
-  "Standard Chartered Bank (Pakistan) Limited",
-  "The Bank of Khyber",
-  "The Bank of Punjab (BOP)",
-  "United Bank Limited (UBL)",
-  "Zarai Taraqiati Bank Limited (ZTBL)",
-];
+export { bankList };

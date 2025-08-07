@@ -64,10 +64,12 @@ const DropdownMobile = ({
   children,
   top = null,
   content,
+  click,
 }: {
   children: ReactNode;
   top: string | null;
   content: Record<string, string>;
+  click: (v: boolean) => void;
 }) => {
   return (
     <AccordionItem value={top || "item"} className="border-b-0">
@@ -84,6 +86,7 @@ const DropdownMobile = ({
           <Link
             href={content[key]}
             key={index}
+            onClick={() => click(false)}
             className="text-lg flex items-center gap-3 rounded-lg px-3 py-1 text-muted-foreground transition-all hover:text-primary"
           >
             <p>{key}</p>

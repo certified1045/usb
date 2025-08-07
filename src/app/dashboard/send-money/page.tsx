@@ -1,13 +1,7 @@
 "use client";
 
 import { useContext, useState } from "react";
-import styles from "@/styles/Dashboard.module.css";
-import {
-  australianBanks,
-  bankList,
-  europeanBanks,
-  pakistaniCommercialBanks,
-} from "@/helpers/banksList";
+import { australianBanks, bankList, europeanBanks } from "@/helpers/banksList";
 import {
   Dialog,
   DialogContent,
@@ -54,13 +48,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import AddPin from "./add-pin";
 
 const CODES = ["TAC", "MLC", "IMF"];
 
 const SendMoney = () => {
-  const { user }: any = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
-  const index = (user?.account_no - 1002784563).toString();
+  console.log({ pin: user?.pin });
+
+  const index = (user!?.account_no - 1002784563).toString();
 
   const [account_no, setAccount_no] = useState("");
   const [amount, setAmount] = useState("");
@@ -89,11 +88,11 @@ const SendMoney = () => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log({ pin: data });
-    if (data.pin == user.pin) {
+    if (data.pin == user!.pin) {
       setTrial(1);
       setOpenModal(true);
     } else {
-      alert("Wrong pin");
+      toast.error("Wrong pin");
     }
   }
 
@@ -139,7 +138,7 @@ const SendMoney = () => {
       <div className="flex justify-center gap-3 flex-col items-center w-full">
         <MessageSquareWarning className="size-24 text-orange-700 mt-14" />
         <p className="text-3xl font-medium">Transaction Failed!!!</p>
-        <p>contact customer care - customercare@capitalspringsbank.com</p>
+        <p>contact customer care - customercare@trustgroupcreditunion.com</p>
       </div>
     );
   } else {
@@ -173,20 +172,26 @@ const SendMoney = () => {
                   </label>
                   <label>
                     <p>Select Bank:</p>
-                    <select
+                    <Select
                       value={selectedBank}
-                      onChange={(e) => setSelectedBank(e.target.value)}
+                      onValueChange={setSelectedBank}
+                      // onChange={(e) => setSelectedBank(e.target.value)}
                     >
-                      {bankList.map((bankName, index) => (
-                        <option
-                          key={index}
-                          value={bankName}
-                          style={{ color: "black" }}
-                        >
-                          {bankName}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select the bank name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {bankList.map((bankName, index) => (
+                          <SelectItem
+                            key={bankName}
+                            value={bankName}
+                            // style={{ color: "black" }}
+                          >
+                            {bankName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </label>
                   <label>
                     <p>Amount:</p>
@@ -198,12 +203,13 @@ const SendMoney = () => {
                     />
                   </label>
                   <label>
-                    <p>Note:</p>
-                    <textarea
+                    <p>Description:</p>
+                    <Textarea
                       value={note}
+                      // className="h-40"
                       required
                       onChange={(e) => setNote(e.target.value)}
-                    ></textarea>
+                    ></Textarea>
                   </label>
                   <Button
                     type="submit"
@@ -239,13 +245,13 @@ const SendMoney = () => {
                     <p>Select Bank:</p>
                     <Select>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a bank" />
+                        <SelectValue placeholder="Select bank" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Australia</SelectLabel>
                           {australianBanks.map((val, i) => (
-                            <SelectItem value={val} key={val + i + "aus"}>
+                            <SelectItem value={val} key={val}>
                               {val}
                             </SelectItem>
                           ))}
@@ -253,15 +259,7 @@ const SendMoney = () => {
                         <SelectGroup>
                           <SelectLabel>Europe</SelectLabel>
                           {europeanBanks.map((val, i) => (
-                            <SelectItem value={val} key={val + i + "eu"}>
-                              {val}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                        <SelectGroup>
-                          <SelectLabel>Pakistan</SelectLabel>
-                          {pakistaniCommercialBanks.map((val, i) => (
-                            <SelectItem value={val} key={val + i + "aus"}>
+                            <SelectItem value={val} key={val}>
                               {val}
                             </SelectItem>
                           ))}
@@ -279,12 +277,12 @@ const SendMoney = () => {
                     />
                   </label>
                   <label>
-                    <p>Note:</p>
-                    <textarea
+                    <p>Description:</p>
+                    <Textarea
                       value={note}
                       required
                       onChange={(e) => setNote(e.target.value)}
-                    ></textarea>
+                    />
                   </label>
                   <Button
                     type="submit"
@@ -346,7 +344,7 @@ const SendMoney = () => {
                 <p className="mb-4 text-teal-800 ml-2.5">
                   Don&apos;t have {trial == 1 && "TAC"} {trial == 2 && "MLC"}{" "}
                   {trial == 3 && "IMF"} code? Please contact us via
-                  customercare@capitalspringsbank.com
+                  customercare@trustgroupcreditunion.com
                 </p>
               </div>
               <DialogFooter>
@@ -368,44 +366,45 @@ const SendMoney = () => {
           </Dialog>
           <Dialog open={showPin} onOpenChange={setShowPin}>
             <DialogContent className="">
-              <DialogHeader>
-                {/* <DialogTitle>Funds Transfer</DialogTitle> */}
-                <DialogDescription>
-                  <Form {...form}>
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="w-2/3 space-y-6"
-                    >
-                      <FormField
-                        control={form.control}
-                        name="pin"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>PIN</FormLabel>
-                            <FormControl>
-                              <InputOTP maxLength={5} {...field}>
-                                <InputOTPGroup>
-                                  <InputOTPSlot index={0} />
-                                  <InputOTPSlot index={1} />
-                                  <InputOTPSlot index={2} />
-                                  <InputOTPSlot index={3} />
-                                  <InputOTPSlot index={4} />
-                                </InputOTPGroup>
-                              </InputOTP>
-                            </FormControl>
-                            <FormDescription>
-                              Please enter your account pin.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+              {user?.pin ? (
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-2/3 space-y-6"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="pin"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>PIN</FormLabel>
+                          <FormControl>
+                            <InputOTP maxLength={5} {...field}>
+                              <InputOTPGroup>
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                                <InputOTPSlot index={3} />
+                                <InputOTPSlot index={4} />
+                              </InputOTPGroup>
+                            </InputOTP>
+                          </FormControl>
+                          <FormDescription>
+                            Please enter your account pin.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                      <Button type="submit">Submit</Button>
-                    </form>
-                  </Form>
-                </DialogDescription>
-              </DialogHeader>
+                    <Button type="submit">Submit</Button>
+                  </form>
+                </Form>
+              ) : (
+                <AddPin />
+              )}
+
+              {/* </DialogDescription> */}
             </DialogContent>
           </Dialog>
         </Tabs>

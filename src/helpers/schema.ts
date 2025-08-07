@@ -28,7 +28,11 @@ export const RegisterApiSchema = z.object({
     .min(2, { message: "Must contain at least 2 characters" })
     .max(15, { message: "Must contain at most 15 characters" })
     .regex(/[a-zA-z]/, { message: "Must contain alphabets only" }),
-  phoneNumber: z.string().optional(),
+  // phoneNumber: z.string().refine((e) => {
+  //   console.log({ phoneee: isMobilePhone(e) });
+  //   return isMobilePhone(e);
+  // }),
+  phoneNumber: z.string().min(9, { message: "Invalid phone number" }),
   email: z
     .string()
     .email({ message: "Please input a valid email address" })
@@ -40,7 +44,10 @@ export const RegisterApiSchema = z.object({
 });
 
 export const EditUserSchema = z.object({
-  pin: z.string().length(5, { message: "Must be 5 characters long" }),
+  pin: z
+    .string()
+    .length(5, { message: "Must be 5 characters long" })
+    .optional(),
   isAdmin: z.boolean(),
   verified: z.boolean(),
   email: z
@@ -78,6 +85,7 @@ export const CreateUserSchema = RegisterApiSchema.extend({
 
 export const RegisterSchema = RegisterApiSchema.extend({
   agree: z.boolean(),
+  // agree: z.literal("on", { message: "Agree to the Terms and condition" }),
   confirm_password: z
     .string()
     .min(4, { message: "Must contain at least 4 characters" })
@@ -98,27 +106,15 @@ export const RegisterSchema = RegisterApiSchema.extend({
     });
   }
 });
-// model Trans {
-//   id             Int      @id @default(autoincrement())
-//   account        User     @relation(fields: [userAccount_no], references: [account_no])
-//   amount         Int
-//   // charge         Int      @default(0)
-//   type           String   @default("Deposit")
-//   condition      String   @default("Completed")
-//   currency       String   @default("$")
-//   created_at     DateTime @default(now())
-//   name           String
-//   userAccount_no Int
-//   note           String   @default("")
-// }
 
 export const TransactionsSchema = z.object({
-  id: string().length(10),
-  amount: z.number(),
+  category: string(),
+  amount: z.coerce
+    .number()
+    .positive({ message: "Amount must be greater than 0" }),
   type: z.string(),
-  date: z.string(),
-  accountName: string(),
-  note: z.string(),
+  date: z.string().or(z.date()),
+  description: z.string(),
 });
 // export const UpdateBalSchema = z.object({
 // 	email: string()
@@ -144,12 +140,20 @@ export type UpdateBalSchemaType = z.infer<typeof UpdateBalSchema>;
 
 // export type requestOtpInput = z.TypeOf<typeof requestOtpSchema>;
 
-export const TestSchema = z.object({
-  email: string()
-    .email({ message: "Please input a valid email address" })
-    .max(10, { message: "Must contain at most 50 characters" }),
-  password: string()
-    .min(4, { message: "Must contain at least 4 characters" })
-    .max(10, { message: "Must contain at most 20 characters" }),
-  figure: number(),
-});
+export const TestSchema = z
+  .object({
+    pin: z.string().length(5, { message: "Must be 5 characters long" }),
+    confirmPin: z.string().length(5, { message: "Must be 5 characters long" }),
+    pass: string()
+      .min(4, { message: "Must contain at least 4 characters" })
+      .max(10, { message: "Must contain at most 20 characters" }),
+  })
+  .superRefine(({ confirmPin, pin }, ctx) => {
+    if (confirmPin !== pin) {
+      ctx.addIssue({
+        code: "custom",
+        message: "The pin codes do not match",
+        path: ["confirmPin"],
+      });
+    }
+  });

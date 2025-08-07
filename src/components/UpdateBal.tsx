@@ -1,13 +1,14 @@
 "use client";
-import React, { useState, useContext } from "react";
-import styles from "@/styles/Dashboard.module.css";
-import AuthContext from "@/components/AuthContext";
+
+import { useState, useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
-import { UpdateBalSchema, UpdateBalSchemaType } from "../helpers/schema";
-import { API_URL } from "@/helpers/vars";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+import AuthContext from "@/components/AuthContext";
+import styles from "@/styles/Dashboard.module.css";
+import { UpdateBalSchema, UpdateBalSchemaType } from "../helpers/schema";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
@@ -36,7 +37,7 @@ const UpdateBal = ({ api, CROrDR }: { api: string; CROrDR: string }) => {
   //   return () => subscription.unsubscribe();
   // }, [watch]);
 
-  const { getAllUsers, users }: any = useContext(AuthContext);
+  const { getAllUsers, users, checkUserLoggedIn } = useContext(AuthContext);
 
   const updateBal = async ({
     account_no,
@@ -46,7 +47,7 @@ const UpdateBal = ({ api, CROrDR }: { api: string; CROrDR: string }) => {
   UpdateBalSchemaType) => {
     // const adjustedTime = new Date(date);
     // const created_at = adjustedTime.toISOString();
-    const res = await fetch(`${API_URL}/admin/${api}`, {
+    const res = await fetch(`/api/v1/admin/${api}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,11 +63,14 @@ const UpdateBal = ({ api, CROrDR }: { api: string; CROrDR: string }) => {
 
     const data = await res.json();
     if (res.ok) {
-      getAllUsers();
-      alert("user account balance has been updated");
+      getAllUsers!();
+      checkUserLoggedIn!();
+      toast.success(`user account balance has been ${CROrDR}ed updated`);
+      router.push("/admin");
       reset();
     } else {
       setError(data.message);
+      toast.error(data.message || "");
       error ?? console.log(error);
     }
   };
@@ -88,7 +92,7 @@ const UpdateBal = ({ api, CROrDR }: { api: string; CROrDR: string }) => {
   return (
     <div className={styles.details}>
       <div className={`${styles.con} ${styles.over}`}>
-        <h6 className="tac">{CROrDR} Account Balance</h6>
+        <h6 className="text-center">{CROrDR} Account Balance</h6>
         <form
           onSubmit={handleSubmit(updateBal)}
           method="POST"
@@ -102,7 +106,7 @@ const UpdateBal = ({ api, CROrDR }: { api: string; CROrDR: string }) => {
           />
           <span className={styles.error}> {errors.account_no?.message}</span>
           <div>
-            {acc_pos !== -1 ? (
+            {acc_pos && acc_pos !== -1 ? (
               <div>
                 <p>Name: {users?.[acc_pos]?.fullName}</p>
                 {/* <p>
@@ -128,18 +132,18 @@ const UpdateBal = ({ api, CROrDR }: { api: string; CROrDR: string }) => {
               Select Currency:
               <input
                 type="radio"
-                value="€"
-                {...register("currency")}
-                className="ml-3"
-              />{" "}
-              €
-              <input
-                type="radio"
-                {...register("currency")}
                 value="$"
+                {...register("currency")}
                 className="ml-3"
               />{" "}
               $
+              <input
+                type="radio"
+                {...register("currency")}
+                value="€"
+                className="ml-3"
+              />{" "}
+              €
             </label>
           </div>
           <span className={styles.error}> {errors.currency?.message}</span>

@@ -1,9 +1,6 @@
 .dashboard {
   padding: 0px 1rem;
 }
-.dashboardLayout {
-  padding: 0px 100px 90px 100px;
-}
 .layout {
   display: flex;
   grid-auto-flow: column;
@@ -28,48 +25,12 @@
 .navClose {
   display: none;
 }
-
-.warning {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  color: #721c24;
-  background-color: #f8d7da;
-  border: #f5c6cb 1px solid;
-}
 .details {
   background-color: #fafbfe;
   box-shadow: var(--shadow);
   overflow-x: hidden;
   overflow-y: hidden;
   width: 100%;
-}
-
-.resFlex {
-  display: flex;
-  gap: 0.5rem;
-}
-.flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-.resFlex > div,
-.con {
-  padding: 1.25rem 1.6rem;
-  background-color: white;
-  margin: 1rem;
-  border-radius: 5px;
-}
-.conp {
-  /* width: 100%; */
-  background-color: white;
-  margin: 1rem;
-  border-radius: 5px;
-}
-.resFlex > div {
-  width: 100%;
-  border-bottom: 3px solid blue;
 }
 
 .over {
@@ -226,16 +187,5 @@
     position: absolute;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     left: -250px;
-  }
-}
-@media screen and (max-width: 800px) {
-  .dashboardLayout {
-    padding: 0px 2rem 90px 2rem;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .dashboardLayout {
-    padding: 0px 1rem 90px 1rem;
   }
 }

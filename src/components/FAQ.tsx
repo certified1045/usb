@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import styles from '@/styles/FAQ.module.css';
+import { useState } from "react";
+import styles from "@/styles/FAQ.module.css";
 
 const FAQ = ({ question, answer }: any) => {
   const [open, setOpen] = useState(false);

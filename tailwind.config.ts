@@ -36,6 +36,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        secondaryColor: {
+          DEFAULT: "hsl(var(--secondary-color))",
+          hover: "hsl(var--hover-color))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",

@@ -2,28 +2,13 @@
 
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { User } from "@/db/schema/schema";
 // import type {} from "@prisma/client"
 
-export interface IUser {
-  email: string;
-  isAdmin: boolean;
-  fullName: string;
-  phoneNumber: string;
-  created_at: Date;
-  account_no: number;
-  account_bal: number;
-  verified: boolean;
-  verifying: boolean;
-  pending_KYC: boolean;
-  verification: null | { identity_doc: string; address_doc: string };
-  verification_id: number | null;
-  currency: string;
-  transactions?: [];
-}
-
 interface IContext {
-  user: IUser | null;
-  users: IUser[] | null;
+  user: User | null;
+  users: User[] | null;
   loading: boolean;
   error: any;
   authChecking: boolean;
@@ -42,8 +27,8 @@ const AuthContext = createContext<IContext>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<IUser | null>(null);
-  const [users, setUsers] = useState<IUser[] | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null);
   const [error, setError] = useState(null) as any;
   const [loading, setLoading] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
@@ -52,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async ({ email, password }: any) => {
     setLoading(true);
-    const res = await fetch(`/api/auth/login`, {
+    const res = await fetch("/api/v1/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,25 +53,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const data = await res.json();
     console.log({ loginDAta: data });
     setLoading(false);
-    if (res?.ok) {
-      setUser(data);
-      router.refresh();
-      // user?.isAdmin ? router.push("/dashboard") : router.push("/admin");
-      if (user?.isAdmin) {
-        // window.location.href = "/dashboard";
-        router.push("/dashboard");
-      } else {
+    if (res?.ok && data.data) {
+      setUser(data.data);
+      toast.success("You are now logged in", {
+        description: `Welcome ${data?.data?.fullName}`,
+      });
+      if (data?.data?.isAdmin) {
         router.push("/admin");
-        // window.location.href = "/admin";
+      } else {
+        router.push("/dashboard");
       }
     } else {
+      toast.error("Log in failed", {
+        description: data.message || "Something went wrong. Please try again",
+      });
       setError(data.message);
       error ?? console.log(error);
     }
   };
 
   const signout = async () => {
-    const res = await fetch(`/api/auth/logout`, {
+    await fetch("/api/v1/auth/logout", {
       method: "POST",
       credentials: "include",
       cache: "no-store",
@@ -94,7 +81,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     setUser(null);
     router.push("/");
-    router.refresh();
   };
 
   useEffect(() => {
@@ -105,7 +91,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   console.log({ users });
 
   async function checkUserLoggedIn() {
-    const res = await fetch(`/api/auth/login`, {
+    setAuthChecking(true);
+    const res = await fetch("/api/v1/auth/login", {
       method: "GET",
       credentials: "include",
       cache: "no-store",
@@ -124,13 +111,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
   const getAllUsers = async () => {
-    const res = await fetch(`/api/user`, {
+    const res = await fetch("/api/v1/user", {
       method: "GET",
       credentials: "include",
       cache: "no-store",
       next: { revalidate: 0 },
     });
-    const data: IUser[] = await res.json();
+    const data: User[] = await res.json();
     console.log("🚀 ~ file: AuthContext.tsx:56 ~ data:", data);
     if (res.ok) {
       setUsers([...data]);

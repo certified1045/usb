@@ -1,20 +1,18 @@
 import Link from "next/link";
-import React, { useContext } from "react";
 import styles from "@/styles/Policy.module.css";
 
 const TermsAndConditions = () => {
   return (
-    <section className={styles.policy}>
-      <div className={styles.pad}>
-        <h1>Terms and Conditions</h1>
+    <section className="pb-24 px-4 sm:px-8 md:px-24">
+      <div className="bg-[#223a66] p-4">
+        <h1 className="text-white">Terms and Conditions</h1>
       </div>
       <div>
         <h6>Terms and Conditions</h6>
         <p>Welcome to Capital Springs Bank!</p>
         <p>
           These terms and conditions outline the rules and regulations for the
-          use of Capital Springs Bank&#39;s Website, located at https://Capital
-          Springs Bankbank.com.
+          use of Capital Springs Bank&#39;s Website
         </p>
         <p>
           By accessing this website we assume you accept these terms and
@@ -47,7 +45,7 @@ const TermsAndConditions = () => {
           restrictions set in these terms and conditions.
         </p>
         <p>You must not:</p>
-        <ul>
+        <ul className="list-inside list-disc">
           <li>Republish material from Capital Springs Bank</li>
           <li>Sell, rent or sub-license material from Capital Springs Bank</li>
           <li>
@@ -79,7 +77,7 @@ const TermsAndConditions = () => {
           or causes breach of these Terms and Conditions.
         </p>
         <p>You warrant and represent that:</p>
-        <ul>
+        <ul className="list-inside list-disc">
           <li>
             You are entitled to post the Comments on our website and have all
             necessary licenses and consents to do so;
@@ -109,7 +107,7 @@ const TermsAndConditions = () => {
           The following organizations may link to our Website without prior
           written approval:
         </p>
-        <ul>
+        <ul className="list-inside list-disc">
           <li>Government agencies;</li>
           <li>Search engines;</li>
           <li>News organizations;</li>
@@ -135,7 +133,7 @@ const TermsAndConditions = () => {
           We may consider and approve other link requests from the following
           types of organizations:
         </p>
-        <ul>
+        <ul className="list-inside list-disc">
           <li>commonly-known consumer and/or business information sources</li>
           <li>dot.com community sites;</li>
           <li>associations or other groups representing charities;</li>
@@ -168,7 +166,7 @@ const TermsAndConditions = () => {
           Wait 2-3 weeks for a response.
         </p>
         <p>Approved organizations may hyperlink to our Website as follows:</p>
-        <ul>
+        <ul className="list-inside list-disc">
           <li>By use of our corporate name; or</li>
           <li>By use of the uniform resource locator being linked to; or</li>
           <li>
@@ -226,7 +224,7 @@ const TermsAndConditions = () => {
           representations, warranties and conditions relating to our website and
           the use of this website. Nothing in this disclaimer will:
         </p>
-        <ul>
+        <ul className="list-inside list-disc">
           <li>
             limit or exclude our or your liability for death or personal injury;
           </li>

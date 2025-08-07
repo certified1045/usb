@@ -1,11 +1,8 @@
 "use client";
 
 import AuthContext from "@/components/AuthContext";
-import React, { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import styles from "@/styles/Dashboard.module.css";
-import Image from "next/image";
-import Modal from "@/components/Modal";
-import { API_URL } from "@/helpers/vars";
 import { VerifyColumns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/data-table";
 
@@ -34,10 +31,7 @@ const Kyc = () => {
 
   interface kkk extends Array<kk> {}
 
-  const { users, getAllUsers } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [docImg, setDocImg] = useState("");
+  const { users } = useContext(AuthContext);
 
   console.log({ users });
 
@@ -64,40 +58,6 @@ const Kyc = () => {
   // 	};
   // 	getAllKYCs();
   // }, []);
-
-  const handleImgView = (displayImg: string) => {
-    setDocImg(displayImg);
-    setOpenModal(true);
-  };
-
-  const verify = async (
-    // e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    e: any
-  ) => {
-    console.log(e.target.value);
-    const account_no = e.target.value;
-    setLoading(true);
-    const res = await fetch("/api/admin/verify-doc", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        account_no,
-      }),
-    });
-    const data = await res.json();
-    console.log(data);
-    setLoading(false);
-    if (res.ok) {
-      alert("User verified successfully");
-      getAllUsers();
-      console.log(data);
-    } else {
-      alert("unsuccessful");
-    }
-  };
 
   return (
     <div className={styles.details}>

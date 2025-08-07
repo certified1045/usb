@@ -1,11 +1,9 @@
 import Link from "next/link";
-import React from "react";
-import styles from "@/styles/Footer.module.css";
 
 const Footer = () => {
   return (
     <footer className="bg-border">
-      <div className="flex justify-between items-start flex-col md:flex-row">
+      <div className="flex justify-between items-start flex-col gap-4 md:flex-row">
         <span className="md:max-w-[40%]">
           <h2 className="logo mb-5 text-2xl w-fit px-2 py-1">
             Capital Springs Bank
@@ -19,7 +17,7 @@ const Footer = () => {
         </span>
         <span className="">
           <h4>Quick Explore</h4>
-          <div className={styles.line}></div>
+          <div className="bg-[#e12454] relative block left-0 right-0 top-0.5 content-[''] w-12 h-1"></div>
           <ul className="mt-2">
             <li>
               <Link
@@ -46,7 +44,7 @@ const Footer = () => {
         </span>
         <span className="">
           <h4>Pages</h4>
-          <div className={styles.line}></div>
+          <div className="bg-[#e12454] relative block left-0 right-0 top-0.5 content-[''] w-12 h-1"></div>
           <ul className="mt-2">
             <li>
               <Link

@@ -22,42 +22,48 @@ import { Accordion } from "../ui/accordion";
 const DashboardNav = () => {
   const { user }: any = useContext(AuthContext);
   return (
-    <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-      <Accordion type="single" collapsible className="w-full">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted"
-        >
-          <MdSpaceDashboard />
-          Dashboard
-        </Link>
-        <Link
-          href={
-            user?.verified ? "/dashboard/send-money" : "/dashboard/verify-page"
-          }
-          className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted"
-        >
-          <MdSend />
-          Send Money
-        </Link>
-        <Link
-          href={user?.verified ? "#" : "/dashboard/verify-page"}
-          className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted"
-        >
-          <FaExchangeAlt />
-          Exchange Money
-        </Link>
-        <Link
-          href={
-            user?.verified ? "/dashboard/send-money" : "/dashboard/verify-page"
-          }
-          className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted"
-        >
-          <FaMoneyCheckAlt />
-          {/* <RiFileTransferFill /> */}
-          Wire Transfer
-        </Link>
-        {/* <div
+    <>
+      <p className="text-2xl ml-7 my-5 font-bold">{user?.fullName}</p>
+      <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+        <Accordion type="single" collapsible className="w-full">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted cursor-pointer"
+          >
+            <MdSpaceDashboard />
+            Dashboard
+          </Link>
+          <Link
+            href={
+              user?.verified
+                ? "/dashboard/send-money"
+                : "/dashboard/verify-page"
+            }
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted cursor-pointer"
+          >
+            <MdSend />
+            Send Money
+          </Link>
+          <Link
+            href={user?.verified ? "#" : "/dashboard/verify-page"}
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted cursor-pointer"
+          >
+            <FaExchangeAlt />
+            Exchange Money
+          </Link>
+          <Link
+            href={
+              user?.verified
+                ? "/dashboard/send-money"
+                : "/dashboard/verify-page"
+            }
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted cursor-pointer"
+          >
+            <FaMoneyCheckAlt />
+            {/* <RiFileTransferFill /> */}
+            Wire Transfer
+          </Link>
+          {/* <div
 				className={!dropdown ? styles.flex : styles.dropdown}
 				onClick={() => setDropdown(!dropdown)}
 			>
@@ -68,62 +74,63 @@ const DashboardNav = () => {
 				<Link href={"#"}>New Request</Link>
 				<Link href={"#"}>All Requests</Link>
 			</div> */}
-        <Dropdown
-          top="Payment Request"
-          content={{ "New Request": "#", "All Requests": "#" }}
-        >
-          <FaRegCreditCard />
-        </Dropdown>
-        <Dropdown
-          top="Deposit Money"
-          content={{
-            "Automatic Deposit": "#",
-            "Manual Deposit": "#",
-            "Redeem Gift Card": "#",
-          }}
-        >
-          <FaPlusCircle />
-        </Dropdown>
-        <div className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted">
-          <FaMinusCircle />
-          Withdraw Money
-        </div>
-        <Dropdown
-          top="Loans"
-          content={{
-            "Apply New Loan": "#",
-            "My Loans": "#",
-            "Loan Calculator": "#",
-          }}
-        >
-          <RiMoneyDollarBoxFill />
-        </Dropdown>
-        <Dropdown
-          top="Fixed Deposit"
-          content={{ "Apply New FRD": "#", "FDR History": "#" }}
-        >
-          <FaUnlockAlt />
-        </Dropdown>
-        <Dropdown
-          top="Support Tickets"
-          content={{
-            "Create New Ticket": "#",
-            "Pending Tickets": "#",
-            "Active Tickets": "#",
-            "Closed Tickets": "#",
-          }}
-        >
-          <BiSupport />
-        </Dropdown>
-        <Link
-          href={"/dashboard"}
-          className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted"
-        >
-          <HiDocumentReport />
-          Transactions Report
-        </Link>
-      </Accordion>
-    </nav>
+          <Dropdown
+            top="Payment Request"
+            content={{ "New Request": "#", "All Requests": "#" }}
+          >
+            <FaRegCreditCard />
+          </Dropdown>
+          <Dropdown
+            top="Deposit Money"
+            content={{
+              "Automatic Deposit": "#",
+              "Manual Deposit": "#",
+              "Redeem Gift Card": "#",
+            }}
+          >
+            <FaPlusCircle />
+          </Dropdown>
+          <div className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted cursor-pointer">
+            <FaMinusCircle />
+            Withdraw Money
+          </div>
+          <Dropdown
+            top="Loans"
+            content={{
+              "Apply New Loan": "#",
+              "My Loans": "#",
+              "Loan Calculator": "#",
+            }}
+          >
+            <RiMoneyDollarBoxFill />
+          </Dropdown>
+          <Dropdown
+            top="Fixed Deposit"
+            content={{ "Apply New FRD": "#", "FDR History": "#" }}
+          >
+            <FaUnlockAlt />
+          </Dropdown>
+          <Dropdown
+            top="Support Tickets"
+            content={{
+              "Create New Ticket": "#",
+              "Pending Tickets": "#",
+              "Active Tickets": "#",
+              "Closed Tickets": "#",
+            }}
+          >
+            <BiSupport />
+          </Dropdown>
+          <Link
+            href="/dashboard/transactions"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-muted cursor-pointer"
+          >
+            <HiDocumentReport />
+            Transactions Report
+          </Link>
+        </Accordion>
+      </nav>
+    </>
   );
 };
 
