@@ -71,9 +71,9 @@ export async function middleware(req: NextRequest) {
         //   )
         // );
       }
-      if (!decodedToken.is_admin && path.startsWith("/api/v1/admin")) {
-        return getErrorResponse(403, "You are not authorised for this action");
-      }
+      // if (!decodedToken.is_admin && path.startsWith("/api/v1/admin")) {
+      //   return getErrorResponse(403, "You are not authorised for this action");
+      // }
       // if (decodedToken.is_admin && path.startsWith('/login')) {
       //   return NextResponse.redirect(new URL('/admin/users', req.url));
       // }
