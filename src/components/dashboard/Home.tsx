@@ -61,7 +61,7 @@ export default function Home() {
           {!user ? (
             <Skeleton className="h-5 mt-2 w-20" />
           ) : (
-            <p className="text-lg">
+            <p className={`text-lg ${user?.account_bal < 0 && "text-red-700"}`}>
               {user?.currency}
               {user?.account_bal?.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
