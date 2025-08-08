@@ -44,10 +44,8 @@ export const RegisterApiSchema = z.object({
 });
 
 export const EditUserSchema = z.object({
-// TODO: must be five letters long
-  pin: z
-    .string()
-    .optional(),
+  // TODO: must be five letters long
+  pin: z.string().optional(),
   isAdmin: z.boolean(),
   verified: z.boolean(),
   email: z
@@ -146,7 +144,7 @@ export const TestSchema = z
     confirmPin: z.string().length(5, { message: "Must be 5 characters long" }),
     pass: string()
       .min(4, { message: "Must contain at least 4 characters" })
-      .max(10, { message: "Must contain at most 20 characters" }),
+      .max(20, { message: "Must contain at most 20 characters" }),
   })
   .superRefine(({ confirmPin, pin }, ctx) => {
     if (confirmPin !== pin) {
