@@ -34,7 +34,7 @@ export const users = pgTable("person", {
       description: string;
     }[]
   >(),
-  pin: varchar({ length: 5 }).default("44774").notNull(),
+  pin: varchar({ length: 5 }).default(""),
 });
 
 // export const transactions = pgTable("transaction", {

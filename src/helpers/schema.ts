@@ -44,9 +44,9 @@ export const RegisterApiSchema = z.object({
 });
 
 export const EditUserSchema = z.object({
+// TODO: must be five letters long
   pin: z
     .string()
-    .length(5, { message: "Must be 5 characters long" })
     .optional(),
   isAdmin: z.boolean(),
   verified: z.boolean(),
