@@ -12,7 +12,7 @@ CREATE TABLE "person" (
 	"isAdmin" boolean DEFAULT false NOT NULL,
 	"account_no" serial PRIMARY KEY NOT NULL,
 	"trans" json,
-	"pin" varchar(5) DEFAULT '44774' NOT NULL,
+	"pin" varchar(5) DEFAULT '',
 	CONSTRAINT "person_phone_unique" UNIQUE("phone"),
 	CONSTRAINT "person_email_unique" UNIQUE("email"),
 	CONSTRAINT "person_account_no_unique" UNIQUE("account_no")

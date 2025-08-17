@@ -1,7 +1,13 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { australianBanks, bankList, europeanBanks } from "@/helpers/banksList";
+import {
+  australianBanks,
+  bankList,
+  countries,
+  europeanBanks,
+  myanmarBanks,
+} from "@/helpers/banksList";
 import {
   Dialog,
   DialogContent,
@@ -67,7 +73,8 @@ const SendMoney = () => {
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [selectedBank, setSelectedBank] = useState("First Bank");
+  const [selectedBank, setSelectedBank] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
   const [trial, setTrial] = useState(0);
   const [isLoading, setIsloading] = useState(false);
   const [imf, setImf] = useState(false);
@@ -97,8 +104,12 @@ const SendMoney = () => {
   }
 
   const sendMoney = (e: any) => {
-    setIsloading(true);
     e.preventDefault();
+    if (!selectedBank) {
+      toast.error("Select a bank");
+      return;
+    }
+    setIsloading(true);
     setTimeout(() => {}, 3000);
 
     setShowPin(true);
@@ -175,13 +186,14 @@ const SendMoney = () => {
                     <Select
                       value={selectedBank}
                       onValueChange={setSelectedBank}
+                      required
                       // onChange={(e) => setSelectedBank(e.target.value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select the bank name" />
                       </SelectTrigger>
                       <SelectContent>
-                        {bankList.map((bankName, index) => (
+                        {bankList.map((bankName) => (
                           <SelectItem
                             key={bankName}
                             value={bankName}
@@ -227,7 +239,7 @@ const SendMoney = () => {
               <CardHeader>
                 <CardTitle>International transfers</CardTitle>
                 <CardDescription>
-                  Make transfers to banks in Europe and Australia.
+                  Make transfers to banks in Europe, Australia and Myanmar.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -242,31 +254,76 @@ const SendMoney = () => {
                     />
                   </label>
                   <label>
-                    <p>Select Bank:</p>
-                    <Select>
+                    <p>Select Region:</p>
+                    <Select
+                      value={selectedCountry}
+                      onValueChange={(val) => {
+                        setSelectedCountry(val);
+                        setSelectedBank("");
+                      }}
+                      // onChange={(e) => setSelectedCountry(e.target.value)}
+                    >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select bank" />
+                        <SelectValue placeholder="Select the country" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Australia</SelectLabel>
-                          {australianBanks.map((val, i) => (
-                            <SelectItem value={val} key={val}>
-                              {val}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                        <SelectGroup>
-                          <SelectLabel>Europe</SelectLabel>
-                          {europeanBanks.map((val, i) => (
-                            <SelectItem value={val} key={val}>
-                              {val}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
+                        {countries.map((countryName) => (
+                          <SelectItem
+                            key={countryName}
+                            value={countryName}
+                            // style={{ color: "black" }}
+                          >
+                            {countryName}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </label>
+                  {selectedCountry && (
+                    <label>
+                      <p>Select Bank:</p>
+                      <Select
+                        onValueChange={setSelectedBank}
+                        value={selectedBank}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select bank" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {selectedCountry == "Australia" && (
+                            <SelectGroup>
+                              <SelectLabel>Australia</SelectLabel>
+                              {australianBanks.map((val, i) => (
+                                <SelectItem value={val} key={val}>
+                                  {val}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          )}
+                          {selectedCountry == "Europe" && (
+                            <SelectGroup>
+                              <SelectLabel>Europe</SelectLabel>
+                              {europeanBanks.map((val, i) => (
+                                <SelectItem value={val} key={val}>
+                                  {val}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          )}
+                          {selectedCountry == "Myanmar" && (
+                            <SelectGroup>
+                              <SelectLabel>Myanmar</SelectLabel>
+                              {myanmarBanks.map((val, i) => (
+                                <SelectItem value={val} key={val}>
+                                  {val}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </label>
+                  )}
                   <label>
                     <p>Amount:</p>
                     <Input

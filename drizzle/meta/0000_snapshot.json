@@ -1,5 +1,5 @@
 {
-  "id": "e42a8635-a0de-459d-a222-2fa546b84dc6",
+  "id": "3358cbd0-a85c-456c-b596-26d420306012",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -97,8 +97,8 @@
           "name": "pin",
           "type": "varchar(5)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'44774'"
+          "notNull": false,
+          "default": "''"
         }
       },
       "indexes": {},

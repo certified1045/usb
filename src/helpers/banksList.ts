@@ -162,4 +162,47 @@ export const australianBanks = [
   "Westpac",
 ];
 
-export { bankList };
+export const myanmarBanks = [
+  "A Bank (Ayeyarwaddy Farmers Development Bank)",
+  "AGD Bank (Asia Green Development Bank)",
+  "ANZ (Australia and New Zealand Banking Group)",
+  "Asia-Yangon Bank",
+  "Ayeyarwady Bank (AYA Bank)",
+  "Bangkok Bank",
+  "Bank for Investment and Development of Vietnam (BIDV)",
+  "Bank of China",
+  "CB Bank (Co-operative Bank)",
+  "E.SUN Commercial Bank",
+  "First Private Bank",
+  "Glory Farmer Development Bank (G Bank)",
+  "ICBC (Industrial and Commercial Bank of China)",
+  "Kanbawza Bank (KBZ Bank)",
+  "MADB (Myanma Agricultural Development Bank)",
+  "MAB (Myanma Apex Bank)",
+  "Maybank (Malayan Banking Berhad)",
+  "MEB (Myanma Economic Bank)",
+  "MFTB (Myanma Foreign Trade Bank)",
+  "MICB (Myanma Investment and Commercial Bank)",
+  "MUFG Bank",
+  "Myanmar Citizens Bank",
+  "Myanmar Metro Bank",
+  "Myanmar Microfinance Bank",
+  "Myanmar Oriental Bank",
+  "Myanma Tourism Bank",
+  "Myawaddy Bank",
+  "OCBC Bank",
+  "SBI (State Bank of India)",
+  "Shwe Rural and Urban Development Bank (Shwe Bank)",
+  "Siam Commercial Bank",
+  "SME-Development Bank",
+  "Sumitomo Mitsui Banking Corporation",
+  "Tun Commercial Bank (formerly Tun Foundation Bank)",
+  "UAB Bank (United Amara Bank)",
+  "United Overseas Bank (UOB)",
+  "Yadanabon Bank",
+  "Yoma Bank",
+];
+
+const countries = ["Australia", "Europe", "Myanmar"];
+
+export { bankList, countries };
